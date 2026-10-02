@@ -3,9 +3,20 @@ import type { RawHealth, RawRepo } from '@agr/schema';
 const GRAPHQL_URL = 'https://api.github.com/graphql';
 /** Small batches keep each query well inside GitHub's time limit. */
 const BATCH_SIZE = 50;
-const CONCURRENCY = 4;
-const MAX_ATTEMPTS = 3;
+const MAX_ATTEMPTS = 4;
 const REQUEST_TIMEOUT_MS = 30_000;
+/** The longest we will wait when GitHub asks us to back off, so one batch cannot stall the job. */
+const MAX_BACKOFF_MS = 90_000;
+
+/** A failed request, with how long GitHub asked us to wait before retrying (if it said). */
+class RequestFailure extends Error {
+  constructor(
+    message: string,
+    readonly retryAfterMs: number | null,
+  ) {
+    super(message);
+  }
+}
 
 const QUERY = `
   query($ids: [ID!]!) {
@@ -47,7 +58,14 @@ async function queryBatch(ids: string[], options: Required<HealthOptions>): Prom
         body: JSON.stringify({ query: QUERY, variables: { ids } }),
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {
+        const retryAfter = Number(response.headers.get('retry-after'));
+        const detail = (await response.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 160);
+        throw new RequestFailure(
+          `HTTP ${response.status}${detail ? `: ${detail}` : ''}`,
+          retryAfter > 0 ? retryAfter * 1_000 : null,
+        );
+      }
       const body = (await response.json()) as { data?: { nodes?: (HealthNode | null)[] } };
       // A deleted repository comes back as null alongside an error; the rest of the batch is still good.
       const nodes = body.data?.nodes;
@@ -55,7 +73,9 @@ async function queryBatch(ids: string[], options: Required<HealthOptions>): Prom
       return nodes.filter((node): node is HealthNode => typeof node?.id === 'string');
     } catch (error) {
       if (attempt >= MAX_ATTEMPTS) throw error;
-      await options.sleep(1_000 * 2 ** (attempt - 1));
+      // When GitHub says how long to wait (its secondary rate limit does), believe it.
+      const asked = error instanceof RequestFailure ? error.retryAfterMs : null;
+      await options.sleep(Math.min(asked ?? 2_000 * 2 ** (attempt - 1), MAX_BACKOFF_MS));
     }
   }
 }
@@ -101,13 +121,12 @@ export async function addHealth(
     }
   };
 
-  // A few at a time: fast enough for a daily job, gentle enough for GitHub's abuse limits.
+  // One at a time, deliberately. Running these in parallel is several times faster, but
+  // GitHub's secondary rate limit rejected most of the batches when four ran at once.
   if (batches.length > 0) {
     resolved.log(`Looking up releases and open issues in ${batches.length} batches...`);
   }
-  for (let start = 0; start < batches.length; start += CONCURRENCY) {
-    await Promise.all(batches.slice(start, start + CONCURRENCY).map(lookUp));
-  }
+  for (const batch of batches) await lookUp(batch);
 
   resolved.log(
     `Health figures added for ${byNode.size.toLocaleString('en-US')} of ` +

@@ -11,6 +11,7 @@ interface Call {
 function setup(respond?: (ids: string[], call: number) => Response | Error) {
   const calls: Call[] = [];
   const logs: string[] = [];
+  const sleeps: number[] = [];
   const fetchImpl = (async (
     _url: string,
     init: { body: string; headers: Record<string, string> },
@@ -32,10 +33,12 @@ function setup(respond?: (ids: string[], call: number) => Response | Error) {
   const options = {
     token: 'secret',
     fetchImpl,
-    sleep: async () => {},
+    sleep: async (ms: number) => {
+      sleeps.push(ms);
+    },
     log: (line: string) => logs.push(line),
   };
-  return { calls, logs, options };
+  return { calls, logs, sleeps, options };
 }
 
 const repos = [rawRepo(1, 50_000, { node_id: 'N1' }), rawRepo(2, 40_000, { node_id: 'N2' })];
@@ -85,6 +88,51 @@ describe('addHealth', () => {
     const result = await addHealth(repos, options);
     expect(calls).toHaveLength(3);
     expect(result[0]?.health?.open_issues).toBe(7);
+  });
+
+  it('waits as long as GitHub asks when it is rate limited, within reason', async () => {
+    const limited = (seconds: string) =>
+      new Response('{"message":"You have exceeded a secondary rate limit."}', {
+        status: 403,
+        headers: { 'retry-after': seconds },
+      });
+    const { sleeps, logs, options } = setup((_ids, call) =>
+      call === 1 ? limited('30') : call === 2 ? limited('3600') : undefined!,
+    );
+    const result = await addHealth(repos, options);
+
+    expect(sleeps).toEqual([30_000, 90_000]);
+    expect(result[0]?.health?.open_issues).toBe(7);
+    expect(logs.join('\n')).not.toMatch(/failed/);
+  });
+
+  it('never has two lookups in flight at once', async () => {
+    const many = Array.from({ length: 200 }, (_, index) =>
+      rawRepo(index + 1, 20_000, { node_id: `N${index + 1}` }),
+    );
+    let inFlight = 0;
+    let peak = 0;
+    const { options } = setup();
+    const inner = options.fetchImpl;
+    options.fetchImpl = (async (...args: Parameters<typeof fetch>) => {
+      inFlight += 1;
+      peak = Math.max(peak, inFlight);
+      await new Promise((resolve) => setTimeout(resolve, 1));
+      const response = await inner(...args);
+      inFlight -= 1;
+      return response;
+    }) as typeof fetch;
+
+    await addHealth(many, options);
+    expect(peak).toBe(1);
+  });
+
+  it('says why a batch failed', async () => {
+    const { logs, options } = setup(
+      () => new Response('{"message":"Resource not accessible"}', { status: 403 }),
+    );
+    await addHealth(repos, options);
+    expect(logs.join('\n')).toMatch(/HTTP 403: \{"message":"Resource not accessible"\}/);
   });
 
   it('gives up on a batch without failing the fetch', async () => {
