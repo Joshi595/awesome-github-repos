@@ -6,7 +6,7 @@ Every public GitHub repository with 10,000+ stars, in a fast explorer that refre
 **5,605** repositories with 10,000+ stars, as of **2026-10-02**.
 <!-- STATS:END -->
 
-**Live site:** `https://<your-username>.github.io/<this-repository>/` (replace this line once Pages is enabled)
+**Live site: [joshi595.github.io/awesome-github-repos](https://joshi595.github.io/awesome-github-repos/)**
 
 ## What you can do with it
 
