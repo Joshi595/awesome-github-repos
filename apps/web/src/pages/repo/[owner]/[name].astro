@@ -1,9 +1,11 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import type { Repo } from '@agr/schema';
+import { HealthFacts } from '../../../components/repo/HealthFacts';
 import RepoList from '../../../components/repo/RepoList.astro';
+import { RepoTools } from '../../../components/repo/RepoTools';
 import { CompareButton, SaveButton } from '../../../components/shortlist/SaveButton';
-import { Sparkline } from '../../../components/ui/Sparkline';
+import { TrendChart } from '../../../components/ui/TrendChart';
 import Base from '../../../layouts/Base.astro';
 import { getSnapshot, repoById, snapshotNow, TOPIC_PAGE_MIN, topicPageKeys } from '../../../lib/data';
 import {
@@ -42,6 +44,8 @@ const collections = snapshot.collections.flatMap((collection) => {
   return entry ? [{ collection, note: entry.note }] : [];
 });
 const similar = repo.similar.flatMap((id) => repoById(id) ?? []);
+// The samples are the most recent ones, so they pair with the end of the date list.
+const chartDates = snapshot.history.samples.slice(-momentum.spark.length);
 
 const deltas = [
   { label: 'Per day', value: momentum.d1 },
@@ -107,10 +111,15 @@ const deltas = [
                     </div>
                   ))}
                 </dl>
-                {momentum.spark.length > 1 && (
-                  <div class="repo-spark">
-                    <Sparkline values={momentum.spark} width={560} height={96} />
-                    <p class="hint">Stars across the last {momentum.spark.length} weekly samples.</p>
+                {chartDates.length > 1 && (
+                  <div class="panel repo-chart">
+                    <h3>Stars over time</h3>
+                    <TrendChart
+                      client:visible
+                      dates={chartDates}
+                      series={[{ label: repo.name, values: momentum.spark.slice(-chartDates.length) }]}
+                      measure="Stars"
+                    />
                   </div>
                 )}
               </>
@@ -121,6 +130,14 @@ const deltas = [
               </p>
             )
           }
+        </section>
+
+        <section class="section">
+          <div class="section-head">
+            <h2>Understand this repo</h2>
+            <p>Open it in a tool that explains, diagrams or digests the code.</p>
+          </div>
+          <RepoTools name={repo.name} />
         </section>
 
         {
@@ -168,15 +185,12 @@ const deltas = [
                 ))
               }
             </dd>
-            {
-              repo.archived && (
-                <>
-                  <dt>Status</dt>
-                  <dd>Archived, read-only</dd>
-                </>
-              )
-            }
           </dl>
+        </section>
+
+        <section>
+          <h2>Maintenance</h2>
+          <HealthFacts health={repo.health} archived={repo.archived} now={now} />
         </section>
 
         {

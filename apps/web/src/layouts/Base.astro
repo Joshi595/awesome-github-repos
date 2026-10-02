@@ -22,12 +22,17 @@ const { title, description = `Explore the ${formatNumber(snapshot.repository_cou
 const nav = [
   { label: 'Explore', href: href('/') },
   { label: 'Rising', href: href('/rising/') },
+  { label: 'Weekly', href: href('/weekly/') },
   { label: 'Collections', href: href('/collections/') },
   { label: 'Topics', href: href('/topics/') },
   { label: 'Languages', href: href('/languages/') },
   { label: 'Compare', href: href('/compare/') },
   { label: 'Lists', href: href('/lists/') },
+  { label: 'My stars', href: href('/stars/') },
 ];
+const pageTitle = title ? `${title} · ${SITE_NAME}` : `${SITE_NAME}: GitHub repositories with 10k+ stars`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(href('/og.png'), Astro.site);
 const palettePages = [...nav, { label: 'About the data', href: href('/about/') }];
 const path = Astro.url.pathname;
 const isCurrent = (target: string) => (target === href('/') ? path === target : path.startsWith(target));
@@ -38,10 +43,21 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title ? `${title} · ${SITE_NAME}` : `${SITE_NAME}: GitHub repositories with 10k+ stars`}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="awesome/repos weekly" href={href('/weekly/feed.xml')} />
+    <link rel="sitemap" href={href('/sitemap-index.xml')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>
       // Apply a saved theme before first paint. Without one, the system preference decides.
       try {
@@ -88,7 +104,7 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
       </div>
     </footer>
 
-    <CommandPalette client:idle pages={palettePages} />
+    <CommandPalette client:load pages={palettePages} />
 
     <script>
       const root = document.documentElement;

@@ -17,10 +17,29 @@ export const MomentumSchema = z.object({
   rank_delta_7: z.number().int().nullable(),
   /** First appeared above the star threshold within the last 14 days. */
   is_new: z.boolean(),
-  /** Up to 12 weekly star counts, oldest first, ending with the current count. */
+  /**
+   * Up to 12 weekly star counts, oldest first, ending with the current count.
+   * They line up with the end of the snapshot's `history.samples` dates.
+   */
   spark: z.array(z.number().int()),
 });
 export type Momentum = z.infer<typeof MomentumSchema>;
+
+/**
+ * Maintenance figures. The combined count comes with every fetch; the split
+ * counts and the release are `null` when the fetch ran without a token.
+ */
+export const HealthSchema = z.object({
+  /** Open issues and pull requests together. */
+  open_total: z.number().int().nonnegative().nullable(),
+  open_issues: z.number().int().nonnegative().nullable(),
+  open_pull_requests: z.number().int().nonnegative().nullable(),
+  latest_release_at: z.string().nullable(),
+  latest_release_tag: z.string().nullable(),
+  /** Whether releases were looked up at all; `false` means "unknown", not "none". */
+  releases_checked: z.boolean(),
+});
+export type Health = z.infer<typeof HealthSchema>;
 
 export const RepoSchema = z.object({
   /** GitHub's numeric repository id. Stable across renames and transfers. */
@@ -46,6 +65,7 @@ export const RepoSchema = z.object({
   domains: z.array(z.string()).min(1),
   activity: ActivitySchema,
   maturity: MaturitySchema,
+  health: HealthSchema,
   momentum: MomentumSchema,
   /** Ids of the most similar repositories, best match first. */
   similar: z.array(z.number().int()),

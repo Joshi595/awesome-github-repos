@@ -46,6 +46,20 @@ const other = snapshot.domains.find((domain) => domain.id === 'other');
       }
     </p>
 
+    <h2>Weekly reports</h2>
+    <p>
+      Each <a href={href('/weekly/')}>weekly report</a> compares the last snapshot of a week with the last one
+      before that week began, and says which two dates those were. A finished week's report is stored and never
+      recomputed, so its page stays the same. The current week's report is provisional until the week ends.
+    </p>
+
+    <h2>Maintenance figures</h2>
+    <p>
+      Latest release and open issue and pull request counts come from GitHub at snapshot time. They are shown
+      as plain facts, not rolled into a score: a project with no releases may simply not use them, and a large
+      issue count often means many users, not neglect.
+    </p>
+
     <h2>Domains</h2>
     <p>
       Domains are assigned from an editorial taxonomy, not by GitHub. A repository scores points for matching
@@ -62,10 +76,20 @@ const other = snapshot.domains.find((domain) => domain.id === 'other');
       Repositories without topics have no similar list.
     </p>
 
-    <h2>Your lists and comparisons</h2>
+    <h2>"Understand this repo" links</h2>
+    <p>
+      Every repository links to four independent sites that explain it, diagram it, turn it into a text digest
+      for an AI assistant, or write a prompt that would rebuild it. They are third-party services that work by
+      swapping <code>github.com</code> in the address for their own domain. This site only links to them and
+      has no say over their availability or output.
+    </p>
+
+    <h2>Your lists, comparisons and stars</h2>
     <p>
       Saved lists and the comparison selection live in your browser's local storage. They are never uploaded.
       A share link carries the list inside the link itself, so whoever opens it gets their own copy.
+      <a href={href('/stars/')}>Check my stars</a> reads a username's public stars straight from GitHub in
+      your browser; nothing passes through this site.
     </p>
 
     <h2>Reuse</h2>

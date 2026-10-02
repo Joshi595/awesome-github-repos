@@ -12,6 +12,8 @@ import {
   languageColor,
 } from '../../lib/format';
 import { repoPath } from '../../lib/paths';
+import { HealthFacts } from '../repo/HealthFacts';
+import { RepoTools } from '../repo/RepoTools';
 import { CompareButton, SaveButton } from '../shortlist/SaveButton';
 import { SaveMenu } from '../shortlist/SaveMenu';
 import { CloseIcon, ExternalIcon } from '../ui/icons';
@@ -164,7 +166,6 @@ export function RepoDrawer({ repo, data, onClose, onOpenRepo, onTopic }: Props) 
                 </span>
               ))}
               {detail?.license && <span class="badge">{detail.license}</span>}
-              {repo.archived && <span class="badge">Archived</span>}
               {repo.isNew && <span class="badge badge-new">New to the list</span>}
             </div>
             {detail?.homepage && (
@@ -175,6 +176,18 @@ export function RepoDrawer({ repo, data, onClose, onOpenRepo, onTopic }: Props) 
               </p>
             )}
           </section>
+
+          <section>
+            <h3>Understand this repo</h3>
+            <RepoTools name={repo.name} />
+          </section>
+
+          {detail && (
+            <section>
+              <h3>Maintenance</h3>
+              <HealthFacts health={detail.health} archived={repo.archived} now={data.now} />
+            </section>
+          )}
 
           {topics.length > 0 && (
             <section>

@@ -1,0 +1,20 @@
+id: data-engineering-foundations
+title: Databases and Data Engineering
+audience: Engineers
+description: The storage, streaming, and processing systems most data platforms are assembled from.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: postgres/postgres
+    note: The relational database most projects should start with.
+  - name: redis/redis
+    note: In-memory data structures for caching, queues, and counters.
+  - name: duckdb/duckdb
+    note: An embedded analytical database; SQL over local files with no server.
+  - name: ClickHouse/ClickHouse
+    note: A column-oriented database for analytical queries over very large tables.
+  - name: apache/kafka
+    note: The standard distributed log for event streaming.
+  - name: apache/spark
+    note: Distributed batch and stream processing.
+  - name: apache/airflow
+    note: Scheduling and monitoring for data pipelines defined in Python.

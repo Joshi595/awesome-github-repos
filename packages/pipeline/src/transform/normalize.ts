@@ -40,5 +40,13 @@ export function normalizeRepo(raw: RawRepo, classify: Classifier, now: Date): Ba
     domains: classify({ name: raw.full_name, description, language, topics }),
     activity,
     maturity: maturityStatus(raw.created_at, activity, now),
+    health: {
+      open_total: raw.open_issues_count ?? null,
+      open_issues: raw.health?.open_issues ?? null,
+      open_pull_requests: raw.health?.open_pull_requests ?? null,
+      latest_release_at: raw.health?.latest_release_at ?? null,
+      latest_release_tag: raw.health?.latest_release_tag ?? null,
+      releases_checked: Boolean(raw.health),
+    },
   };
 }

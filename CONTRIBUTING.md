@@ -37,6 +37,27 @@ npm install
 
 The site needs a snapshot at `data/site/snapshot.json` before `dev` or `build` will work; either data command creates it.
 
+`data:fetch` without `GITHUB_TOKEN` still works, but it cannot look up releases and the issue / pull request split, so those show as "Not checked".
+
+## Browser tests
+
+The end-to-end tests drive a real browser against the built site, using the bundled sample so the results are the same every time:
+
+```sh
+npm run data:sample
+npm run build
+npm run e2e
+```
+
+Playwright needs a browser. Either download its own once with `npx playwright install chromium`, or point it at one you already have:
+
+```sh
+PLAYWRIGHT_CHANNEL=chrome npm run e2e              # macOS and Linux
+$env:PLAYWRIGHT_CHANNEL = 'chrome'; npm run e2e    # PowerShell
+```
+
+Tests live in `e2e/`. They assert on the sample data, so if you regenerate the fixture (`npm run pipeline -- fixture`) expect to update a few names.
+
 ## Adding a collection
 
 Create `content/collections/<id>.yaml`:

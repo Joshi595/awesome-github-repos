@@ -5,3 +5,4 @@ export * from './repo';
 export * from './site-index';
 export * from './snapshot';
 export * from './taxonomy';
+export * from './weekly';

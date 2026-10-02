@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getSnapshot } from '../../lib/data';
+import { href, weekPath } from '../../lib/paths';
+import { weekRange, weekSummary, weekTitle } from '../../lib/weekly';
+
+const { weekly } = getSnapshot();
+---
+
+<Base title="Weekly reports" description="A report for every week: which repositories gained the most stars, which joined the list and which left it.">
+  <header class="page-head">
+    <p class="eyebrow">Momentum</p>
+    <h1>Weekly reports</h1>
+    <p class="lede">
+      One report per week: who gained the most, who grew fastest, who joined the list and who left it. Each
+      report keeps its address, so it can be linked to and read later.
+    </p>
+    <p class="hint">
+      <a href={href('/weekly/feed.xml')}>Subscribe by RSS</a> to get each report when it is published.
+    </p>
+  </header>
+
+  {
+    weekly.length === 0 ? (
+      <p class="notice">
+        The first report appears once the site has snapshots from two different weeks to compare.
+      </p>
+    ) : (
+      <ul class="card-grid">
+        {weekly.map((report) => (
+          <li>
+            <a class="card" href={weekPath(report.week)}>
+              <span class="eyebrow">{weekRange(report)}</span>
+              <h2>
+                {weekTitle(report)}
+                {!report.final && <span class="badge">In progress</span>}
+              </h2>
+              <p>{weekSummary(report)}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Base>

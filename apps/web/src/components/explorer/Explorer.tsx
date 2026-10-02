@@ -15,6 +15,7 @@ import {
   type SortKey,
 } from '../../lib/filter';
 import { formatCompact, formatDate, formatNumber } from '../../lib/format';
+import { buildVocabulary, correctQuery } from '../../lib/search';
 import { readPreference, writePreference } from '../../lib/storage';
 import { parseFilters, serializeFilters } from '../../lib/url-state';
 import { RepoRow } from '../repo/RepoRow';
@@ -92,11 +93,22 @@ export function Explorer(props: Props) {
     else urlTimer.current = setTimeout(() => writeUrl(next, 'replace'), URL_WRITE_DELAY_MS);
   };
 
-  const results = useMemo<IndexRepo[] | null>(() => {
-    if (data) return filterRepos(data.repos, filters, data.index.collections);
-    // Until the dataset arrives only the default view can be shown.
-    return isUnfiltered(filters) && filters.sort === 'stars' ? props.initialRepos : null;
-  }, [data, filters, props.initialRepos]);
+  const vocabulary = useMemo(() => (data ? buildVocabulary(data.repos) : null), [data]);
+
+  /** The matches, plus the corrected query when a mistyped one found nothing. */
+  const [results, corrected] = useMemo<[IndexRepo[] | null, string | null]>(() => {
+    if (!data || !vocabulary) {
+      // Until the dataset arrives only the default view can be shown.
+      const initial = isUnfiltered(filters) && filters.sort === 'stars' ? props.initialRepos : null;
+      return [initial, null];
+    }
+    const exact = filterRepos(data.repos, filters, data.index.collections);
+    if (exact.length > 0 || !filters.q.trim()) return [exact, null];
+    const suggestion = correctQuery(filters.q, vocabulary);
+    if (!suggestion) return [exact, null];
+    const retry = filterRepos(data.repos, { ...filters, q: suggestion }, data.index.collections);
+    return retry.length > 0 ? [retry, suggestion] : [exact, null];
+  }, [data, vocabulary, filters, props.initialRepos]);
 
   const facets = useMemo<Facets>(() => {
     if (!data) return props.facets;
@@ -309,6 +321,20 @@ export function Explorer(props: Props) {
               </span>
             ))}
           </div>
+        )}
+
+        {corrected && (
+          <p class="correction" role="status">
+            No matches for “{filters.q.trim()}”. Showing results for{' '}
+            <button
+              type="button"
+              class="link-button"
+              onClick={() => update({ ...filters, q: corrected })}
+            >
+              {corrected}
+            </button>
+            .
+          </p>
         )}
 
         {loadError && (

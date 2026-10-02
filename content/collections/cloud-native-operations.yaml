@@ -1,0 +1,20 @@
+id: cloud-native-operations
+title: Cloud-Native Operations
+audience: Engineers
+description: Provisioning, deploying, and observing services once they leave your laptop.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: hashicorp/terraform
+    note: Infrastructure described as code and applied as a plan.
+  - name: ansible/ansible
+    note: Agentless configuration management over SSH.
+  - name: helm/helm
+    note: Package manager for Kubernetes applications.
+  - name: argoproj/argo-cd
+    note: GitOps deployments; the cluster follows what is in the repository.
+  - name: traefik/traefik
+    note: A reverse proxy that configures itself from your containers and services.
+  - name: prometheus/prometheus
+    note: Metrics collection and alerting.
+  - name: grafana/grafana
+    note: Dashboards over metrics, logs, and traces.

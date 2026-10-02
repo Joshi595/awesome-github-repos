@@ -54,3 +54,79 @@ export function scoreMatch(doc: SearchDoc, tokens: readonly string[]): number {
   }
   return score;
 }
+
+/** Words a mistyped query can be corrected to, with how many repositories use each. */
+export type Vocabulary = Map<string, number>;
+
+const MIN_WORD_LENGTH = 3;
+
+/** Every word of every repository name, topic and language. */
+export function buildVocabulary(repos: readonly Searchable[]): Vocabulary {
+  const vocabulary: Vocabulary = new Map();
+  const add = (word: string) => {
+    if (word.length >= MIN_WORD_LENGTH) vocabulary.set(word, (vocabulary.get(word) ?? 0) + 1);
+  };
+  for (const repo of repos) {
+    const terms = [repo.name, ...repo.topics, repo.language ?? ''].map((term) =>
+      term.toLowerCase(),
+    );
+    const words = terms.flatMap((term) => [term, ...term.split(/[^a-z0-9+#]+/)]);
+    new Set(words).forEach(add);
+  }
+  return vocabulary;
+}
+
+/** Levenshtein distance, giving up (and returning `limit + 1`) once it exceeds `limit`. */
+export function editDistance(a: string, b: string, limit: number): number {
+  if (Math.abs(a.length - b.length) > limit) return limit + 1;
+  let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    const current = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const value = Math.min(
+        (previous[j] ?? 0) + 1,
+        (current[j - 1] ?? 0) + 1,
+        (previous[j - 1] ?? 0) + cost,
+      );
+      current.push(value);
+      best = Math.min(best, value);
+    }
+    if (best > limit) return limit + 1;
+    previous = current;
+  }
+  return previous[b.length] ?? limit + 1;
+}
+
+/** How many typos to forgive: none in short words, where a "fix" is usually a different word. */
+function allowedTypos(word: string): number {
+  if (word.length < 4) return 0;
+  return word.length < 8 ? 1 : 2;
+}
+
+/**
+ * A corrected version of a query that found nothing, or `null` when no word
+ * can be fixed. Words that already appear somewhere are left alone; each other
+ * word becomes the closest known word, preferring the more common one.
+ */
+export function correctQuery(query: string, vocabulary: Vocabulary): string | null {
+  const words = [...vocabulary.keys()];
+  let changed = false;
+  const corrected = tokenize(query).map((token) => {
+    if (words.some((word) => word.includes(token))) return token;
+    const limit = allowedTypos(token);
+    let best: { word: string; distance: number; count: number } | null = null;
+    for (const [word, count] of vocabulary) {
+      const distance = limit === 0 ? limit + 1 : editDistance(token, word, limit);
+      if (distance > limit) continue;
+      if (!best || distance < best.distance || (distance === best.distance && count > best.count)) {
+        best = { word, distance, count };
+      }
+    }
+    if (!best) return null;
+    changed = true;
+    return best.word;
+  });
+  return changed && corrected.every((word) => word !== null) ? corrected.join(' ') : null;
+}

@@ -1,0 +1,36 @@
+name: Wrong or missing domain
+description: A repository is filed under the wrong domain, or sits in "Other" when it should not.
+title: 'Domain: '
+labels: [taxonomy]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Domains are assigned from topics, keywords and language by the rules in `content/taxonomy.json`, so a
+        fix usually means adding a topic or keyword there. That helps every similar repository, not just one.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      placeholder: owner/name
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: Domain shown now
+      placeholder: Other
+    validations:
+      required: true
+  - type: input
+    id: expected
+    attributes:
+      label: Domain it should be in
+      placeholder: Databases & Data
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What gives it away?
+      description: A topic it carries or a phrase in its description that the rules could match on.

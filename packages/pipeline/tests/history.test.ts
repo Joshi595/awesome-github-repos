@@ -122,12 +122,21 @@ describe('computeMomentum', () => {
 });
 
 describe('historyMeta', () => {
-  it('summarises the available days', () => {
-    expect(historyMeta(['2026-10-02', '2026-09-17'])).toEqual({
-      days: 2,
+  it('summarises the available days and the dates the sparkline samples', () => {
+    const today = entry('2026-10-02', { 1: 3 });
+    const history = [entry('2026-09-17', { 1: 1 }), entry('2026-09-30', { 1: 2 })];
+    expect(historyMeta(today, history)).toEqual({
+      days: 3,
       first: '2026-09-17',
       last: '2026-10-02',
+      // One per 7-day slot: Sep 30 shares a slot with today, and today is newer.
+      samples: ['2026-09-17', '2026-10-02'],
     });
-    expect(historyMeta([])).toEqual({ days: 0, first: null, last: null });
+    expect(historyMeta(today, [])).toEqual({
+      days: 1,
+      first: '2026-10-02',
+      last: '2026-10-02',
+      samples: ['2026-10-02'],
+    });
   });
 });

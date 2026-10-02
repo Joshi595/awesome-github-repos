@@ -12,10 +12,13 @@ import {
   updateReadme,
 } from '../src/export/markdown';
 import { assertPlausibleCount, buildSnapshot } from '../src/export/snapshot';
+import { shiftDate } from '../src/history/momentum';
 import { createHistoryEntry } from '../src/history/store';
+import { isoWeekOf } from '../src/history/weekly';
 import { collections, loadFixture, taxonomy } from './helpers';
 
 const raw = loadFixture();
+const today = raw.generated_at.slice(0, 10);
 const { snapshot, historyEntry, warnings } = buildSnapshot({
   raw,
   taxonomy,
@@ -65,12 +68,88 @@ describe('buildSnapshot', () => {
     expect(historyEntry.count).toBe(snapshot.repository_count);
     expect(snapshot.history.days).toBe(1);
 
+    expect(snapshot.history.samples).toEqual([today]);
+    expect(snapshot.weekly).toEqual([]);
+
     const first = snapshot.repositories[0]!;
-    const weekAgo = createHistoryEntry('2026-09-10', [{ id: first.id, stars: first.stars - 700 }]);
-    const later = buildSnapshot({ raw, taxonomy, collections, history: [weekAgo] }).snapshot;
-    expect(later.history).toEqual({ days: 2, first: '2026-09-10', last: '2026-09-17' });
-    expect(later.repositories[0]?.momentum.d7).toBe(700);
-    expect(later.repositories[1]?.momentum).toMatchObject({ d7: null, is_new: true });
+    const weekAgo = createHistoryEntry(shiftDate(today, -7), [
+      { id: first.id, stars: first.stars - 700 },
+    ]);
+    const later = buildSnapshot({ raw, taxonomy, collections, history: [weekAgo] });
+    expect(later.snapshot.history).toEqual({
+      days: 2,
+      first: weekAgo.date,
+      last: today,
+      samples: [weekAgo.date, today],
+    });
+    expect(later.snapshot.repositories[0]?.momentum.d7).toBe(700);
+    expect(later.snapshot.repositories[1]?.momentum).toMatchObject({ d7: null, is_new: true });
+  });
+
+  it('builds the running week report and remembers repository names', () => {
+    const first = snapshot.repositories[0]!;
+    const baseline = createHistoryEntry(shiftDate(isoWeekOf(today).start, -1), [
+      { id: first.id, stars: first.stars - 500 },
+      { id: 999_999_999, stars: 12_000 },
+    ]);
+    const result = buildSnapshot({
+      raw,
+      taxonomy,
+      collections,
+      history: [baseline],
+      names: { '999999999': 'gone/away' },
+    });
+
+    const report = result.snapshot.weekly[0]!;
+    expect(report).toMatchObject({ week: isoWeekOf(today).week, final: false, to: today });
+    expect(report.gainers[0]).toMatchObject({ name: first.name, gain: 500 });
+    expect(report.left).toEqual([{ id: 999_999_999, name: 'gone/away', stars: 12_000 }]);
+    expect(report.entered).toHaveLength(snapshot.repository_count - 1);
+    // A week still in progress is recomputed tomorrow, so it is not stored.
+    expect(result.weeklyToStore).toEqual([]);
+    expect(result.names[String(first.id)]).toBe(first.name);
+    expect(result.names['999999999']).toBe('gone/away');
+  });
+
+  it('carries health figures through, marking releases as unchecked without a lookup', () => {
+    const [plain, enriched] = raw.repositories;
+    const result = buildSnapshot({
+      raw: {
+        ...raw,
+        repositories: [
+          { ...plain!, open_issues_count: 42, health: undefined },
+          {
+            ...enriched!,
+            open_issues_count: 30,
+            health: {
+              latest_release_at: '2026-09-01T00:00:00Z',
+              latest_release_tag: 'v2.0.0',
+              open_issues: 20,
+              open_pull_requests: 10,
+            },
+          },
+        ],
+      },
+      taxonomy,
+      collections: [],
+      history: [],
+    }).snapshot;
+    const byId = new Map(result.repositories.map((repo) => [repo.id, repo.health]));
+
+    expect(byId.get(plain!.id)).toEqual({
+      open_total: 42,
+      open_issues: null,
+      open_pull_requests: null,
+      latest_release_at: null,
+      latest_release_tag: null,
+      releases_checked: false,
+    });
+    expect(byId.get(enriched!.id)).toMatchObject({
+      open_issues: 20,
+      open_pull_requests: 10,
+      latest_release_tag: 'v2.0.0',
+      releases_checked: true,
+    });
   });
 
   it('drops repositories below the threshold', () => {
@@ -145,11 +224,14 @@ describe('site index', () => {
       snapshot.repository_count,
     );
     const first = snapshot.repositories[0]!;
-    expect(buckets[first.id % 64]?.[String(first.id)]?.topics).toEqual(first.topics);
+    expect(buckets[first.id % 64]?.[String(first.id)]).toMatchObject({
+      topics: first.topics,
+      health: first.health,
+    });
   });
 
   it('rejects an index from another version', () => {
-    expect(() => decodeSiteIndex({ ...index, v: 99 as 1 })).toThrow(/Unsupported/);
+    expect(() => decodeSiteIndex({ ...index, v: 99 as typeof index.v })).toThrow(/Unsupported/);
   });
 });
 
@@ -177,7 +259,7 @@ describe('markdown export', () => {
   it('updates the README stats and top list, and is stable when run twice', () => {
     const readme = `# Title\n\n${STATS_START_MARKER}\n${STATS_END_MARKER}\n\n${TOP_START_MARKER}\n${TOP_END_MARKER}\n\nFooter\n`;
     const once = updateReadme(readme, snapshot);
-    expect(once).toContain('as of **2026-09-17**');
+    expect(once).toContain(`as of **${today}**`);
     expect(once).toContain('| 100 |');
     expect(once).not.toContain('| 101 |');
     expect(once.endsWith('Footer\n')).toBe(true);

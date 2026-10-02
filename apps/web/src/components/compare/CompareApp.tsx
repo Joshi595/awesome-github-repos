@@ -7,14 +7,16 @@ import {
   activityLabel,
   formatAge,
   formatCompact,
+  formatDate,
   formatDuration,
   formatNumber,
   formatSigned,
 } from '../../lib/format';
 import { comparePath, explorePath, href, repoPath } from '../../lib/paths';
 import { MAX_COMPARE, useCompare } from '../../lib/storage';
+import { alignToDates, gainSinceCommonStart } from '../../lib/chart';
 import { CloseIcon } from '../ui/icons';
-import { Sparkline } from '../ui/Sparkline';
+import { TrendChart } from '../ui/TrendChart';
 
 const SUGGESTION_LIMIT = 6;
 
@@ -105,16 +107,27 @@ export function CompareApp() {
     { label: 'Forks', value: (repo) => repo.forks, render: (repo) => formatNumber(repo.forks) },
     { label: 'Gain per 7 days', value: (repo) => repo.d7, render: (repo) => signed(repo.d7) },
     { label: 'Gain per 30 days', value: (repo) => repo.d30, render: (repo) => signed(repo.d30) },
-    {
-      label: 'Trend',
-      render: (_repo, detail) =>
-        detail && detail.spark.length > 1 ? (
-          <Sparkline values={detail.spark} />
-        ) : (
-          <span class="is-muted">n/a</span>
-        ),
-    },
     { label: 'Age', render: (repo) => formatDuration(repo.createdAt, data.now) },
+    {
+      label: 'Latest release',
+      render: (_repo, detail) => {
+        if (!detail) return '…';
+        if (!detail.health.releases_checked) return <span class="is-muted">not checked</span>;
+        if (!detail.health.latest_release_at) return <span class="is-muted">none published</span>;
+        return `${detail.health.latest_release_tag ?? ''} ${formatAge(Date.parse(detail.health.latest_release_at), data.now)}`.trim();
+      },
+    },
+    {
+      label: 'Open issues and PRs',
+      render: (_repo, detail) => {
+        if (!detail) return '…';
+        const { open_issues: issues, open_pull_requests: pulls, open_total: total } = detail.health;
+        if (issues !== null && pulls !== null) {
+          return `${formatNumber(issues)} issues, ${formatNumber(pulls)} PRs`;
+        }
+        return total === null ? <span class="is-muted">unknown</span> : formatNumber(total);
+      },
+    },
     {
       label: 'Last push',
       value: (repo) => repo.pushedAt,
@@ -149,6 +162,20 @@ export function CompareApp() {
       },
     },
   ];
+
+  // Repositories differ in size by orders of magnitude, so the chart shows stars gained
+  // since the first date they all have data for, on one shared axis.
+  const samples = data.index.history.samples;
+  const trend =
+    repos.length > 0 && repos.every((repo) => details[repo.id])
+      ? gainSinceCommonStart(
+          repos.map((repo) => ({
+            label: repo.name,
+            values: alignToDates(details[repo.id]?.spark ?? [], samples),
+          })),
+          samples,
+        )
+      : null;
 
   /** The id of the repository that leads a metric, when there is a single clear leader. */
   const leader = (metric: Metric): number | null => {
@@ -210,6 +237,12 @@ export function CompareApp() {
       ) : (
         <>
           {repos.length === 1 && <p class="hint">Add at least one more repository to compare.</p>}
+          {trend && (
+            <section class="panel">
+              <h2>Stars gained since {formatDate(trend.dates[0] ?? '')}</h2>
+              <TrendChart dates={trend.dates} series={trend.series} measure="Stars gained" signed />
+            </section>
+          )}
           <div class="table-scroll">
             <table class="compare-table">
               <thead>

@@ -1,6 +1,6 @@
 import type { ResolvedCollection } from './collection';
 import { ACTIVITY_STATUSES, MATURITY_STATUSES, type Activity, type Maturity } from './enums';
-import type { Repo } from './repo';
+import type { Health, Repo } from './repo';
 import type { HistoryMeta, Snapshot } from './snapshot';
 import type { DomainSummary } from './taxonomy';
 
@@ -14,7 +14,7 @@ import type { DomainSummary } from './taxonomy';
  * must only ever import types from the schema modules, never values.
  */
 
-export const SITE_INDEX_VERSION = 1;
+export const SITE_INDEX_VERSION = 2;
 /** Topics used by fewer repositories than this are left out of the index dictionary. */
 export const INDEX_TOPIC_MIN_COUNT = 2;
 /** Number of detail files; a repository lives in bucket `id % DETAIL_BUCKET_COUNT`. */
@@ -95,6 +95,7 @@ export interface RepoDetail {
   d1: number | null;
   spark: number[];
   similar: number[];
+  health: Health;
 }
 export type DetailBucket = Record<string, RepoDetail>;
 
@@ -234,6 +235,7 @@ export function toRepoDetail(repo: Repo): RepoDetail {
     d1: repo.momentum.d1,
     spark: repo.momentum.spark,
     similar: repo.similar,
+    health: repo.health,
   };
 }
 

@@ -1,0 +1,22 @@
+id: command-line-essentials
+title: Modern Command-Line Essentials
+audience: Builders
+description: Faster, friendlier replacements for the tools you use in a terminal every day.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: BurntSushi/ripgrep
+    note: Recursive search that respects .gitignore and is fast on large trees.
+  - name: sharkdp/fd
+    note: A simpler, quicker alternative to find.
+  - name: junegunn/fzf
+    note: Fuzzy finder that plugs into shell history, files, and anything you can pipe.
+  - name: ajeetdsouza/zoxide
+    note: A cd that learns which directories you visit most.
+  - name: eza-community/eza
+    note: A modern ls with Git status and tree views.
+  - name: starship/starship
+    note: A fast prompt that works the same across shells.
+  - name: jesseduffield/lazygit
+    note: A terminal UI for staging, rebasing, and browsing Git history.
+  - name: dandavison/delta
+    note: Readable, syntax-highlighted diffs for Git.

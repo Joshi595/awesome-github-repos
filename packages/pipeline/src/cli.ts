@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { RawSnapshotSchema, SnapshotSchema, type Snapshot } from '@agr/schema';
@@ -7,27 +7,42 @@ import { renderDomainLists, updateReadme } from './export/markdown';
 import { assertPlausibleCount, buildSnapshot } from './export/snapshot';
 import { fetchAllRepositories } from './fetch/fetch-all';
 import { GitHubClient } from './github/client';
+import { addHealth } from './github/health';
 import { HISTORY_LOOKBACK_DAYS, shiftDate } from './history/momentum';
-import { readHistory, writeHistoryEntry } from './history/store';
+import { createHistoryEntry, readHistory, writeHistoryEntry } from './history/store';
+import {
+  readNames,
+  readWeeklyReports,
+  writeNames,
+  writeWeeklyReport,
+} from './history/weekly-store';
 import { fromRoot, readJson, writeFileAtomic } from './io';
 
 const MINIMUM_STARS = 10_000;
 const DEFAULT_RAW = 'data/raw/latest.json';
 const DEFAULT_SITE_DIR = 'data/site';
 const DEFAULT_HISTORY_DIR = 'data/history';
+const DEFAULT_WEEKLY_DIR = 'data/weekly';
+const FIXTURE_HISTORY_DIR = 'fixtures/history';
+const FIXTURE_WEEKLY_DIR = 'fixtures/weekly';
+/** Not a real repository: stands in for one that dropped out between the two sample days. */
+const DEPARTED_SAMPLE = { id: 999_999_999, name: 'example/departed-sample', stars: 10_420 };
 
 const USAGE = `Usage: npm run pipeline -- <command> [options]
 
 Commands:
   fetch      Fetch every repository with ${MINIMUM_STARS.toLocaleString('en-US')}+ stars from GitHub.
                --out <file>           Raw snapshot to write (default ${DEFAULT_RAW})
-             Uses GITHUB_TOKEN when set; without it the fetch is slower.
+             Uses GITHUB_TOKEN when set. Without it the fetch is slower and
+             leaves out release and issue figures.
 
   build      Build the site snapshot from a raw snapshot.
                --from-raw <file>      Raw snapshot to read (default ${DEFAULT_RAW})
                --out <dir>            Output directory (default ${DEFAULT_SITE_DIR})
                --history-dir <dir>    Star history directory (default ${DEFAULT_HISTORY_DIR})
-               --no-history           Neither read nor append history
+               --weekly-dir <dir>     Weekly report directory (default ${DEFAULT_WEEKLY_DIR})
+               --no-history           Neither read nor write history and weekly reports
+               --read-only-history    Read them, but write nothing back
                --force                Skip the repository-count sanity check
 
   readme     Regenerate the README top list and lists/*.md from the built snapshot.
@@ -56,12 +71,18 @@ async function fetchCommand(args: string[]): Promise<void> {
     args,
     options: { out: { type: 'string', default: DEFAULT_RAW } },
   });
-  const client = new GitHubClient({ token: process.env.GITHUB_TOKEN, log });
-  if (!client.authenticated)
-    log('GITHUB_TOKEN is not set: fetching anonymously, which is about three times slower.');
+  const token = process.env.GITHUB_TOKEN;
+  const client = new GitHubClient({ token, log });
+  if (!token) {
+    log(
+      'GITHUB_TOKEN is not set: fetching anonymously, which is about three times slower ' +
+        'and leaves out release and issue figures.',
+    );
+  }
 
   const started = Date.now();
   const raw = await fetchAllRepositories(client, { minimumStars: MINIMUM_STARS, log });
+  if (token) raw.repositories = await addHealth(raw.repositories, { token, log });
   const file = fromRoot(values.out);
   writeFileAtomic(file, `${JSON.stringify(raw)}\n`);
   const seconds = ((Date.now() - started) / 1_000).toFixed(0);
@@ -77,7 +98,9 @@ function buildCommand(args: string[]): void {
       'from-raw': { type: 'string', default: DEFAULT_RAW },
       out: { type: 'string', default: DEFAULT_SITE_DIR },
       'history-dir': { type: 'string', default: DEFAULT_HISTORY_DIR },
+      'weekly-dir': { type: 'string', default: DEFAULT_WEEKLY_DIR },
       'no-history': { type: 'boolean', default: false },
+      'read-only-history': { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
     },
   });
@@ -91,18 +114,23 @@ function buildCommand(args: string[]): void {
   const raw = RawSnapshotSchema.parse(readJson(rawFile));
   const date = new Date(raw.generated_at).toISOString().slice(0, 10);
   const historyDir = fromRoot(values['history-dir']);
+  const weeklyDir = fromRoot(values['weekly-dir']);
   const useHistory = !values['no-history'];
+  const writeBack = useHistory && !values['read-only-history'];
 
   const history = useHistory
     ? readHistory(historyDir, shiftDate(date, -HISTORY_LOOKBACK_DAYS))
     : [];
-  const { snapshot, historyEntry, warnings } = buildSnapshot({
+  const result = buildSnapshot({
     raw,
     taxonomy: loadTaxonomy(fromRoot('content/taxonomy.json')),
     collections: loadCollections(fromRoot('content/collections')),
     history,
+    weekly: useHistory ? readWeeklyReports(weeklyDir) : [],
+    names: useHistory ? readNames(weeklyDir) : {},
   });
-  for (const warning of warnings) log(`Warning: ${warning}`);
+  const { snapshot } = result;
+  for (const warning of result.warnings) log(`Warning: ${warning}`);
 
   if (!values.force) {
     assertPlausibleCount(
@@ -110,7 +138,11 @@ function buildCommand(args: string[]): void {
       history.findLast((entry) => entry.date < date),
     );
   }
-  if (useHistory) writeHistoryEntry(historyDir, historyEntry);
+  if (writeBack) {
+    writeHistoryEntry(historyDir, result.historyEntry);
+    for (const report of result.weeklyToStore) writeWeeklyReport(weeklyDir, report);
+    writeNames(weeklyDir, result.names);
+  }
 
   const file = path.join(fromRoot(values.out), 'snapshot.json');
   writeFileAtomic(file, `${JSON.stringify(snapshot)}\n`);
@@ -190,6 +222,24 @@ function fixtureCommand(args: string[]): void {
   const file = fromRoot(values.out);
   writeFileAtomic(file, `${JSON.stringify(sample, null, 1)}\n`);
   log(`Wrote a ${repositories.length}-repository fixture -> ${file}`);
+
+  // A made-up earlier day, so sample builds exercise momentum and the weekly report:
+  // every repository gains a little, a few are new, and one has since left the list.
+  const earlierDate = shiftDate(new Date(raw.generated_at).toISOString().slice(0, 10), -7);
+  const earlier = createHistoryEntry(earlierDate, [
+    ...repositories
+      .filter((repo) => repo.id % 41 !== 0)
+      .map((repo) => ({
+        id: repo.id,
+        stars: repo.stargazers_count - Math.round((repo.stargazers_count * (repo.id % 13)) / 2_000),
+      })),
+    DEPARTED_SAMPLE,
+  ]);
+  rmSync(fromRoot(FIXTURE_HISTORY_DIR), { recursive: true, force: true });
+  rmSync(fromRoot(FIXTURE_WEEKLY_DIR), { recursive: true, force: true });
+  writeHistoryEntry(fromRoot(FIXTURE_HISTORY_DIR), earlier);
+  writeNames(fromRoot(FIXTURE_WEEKLY_DIR), { [DEPARTED_SAMPLE.id]: DEPARTED_SAMPLE.name });
+  log(`Wrote sample history for ${earlierDate} -> ${fromRoot(FIXTURE_HISTORY_DIR)}`);
 }
 
 async function main(): Promise<void> {

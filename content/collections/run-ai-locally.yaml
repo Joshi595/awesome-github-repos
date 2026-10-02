@@ -1,0 +1,18 @@
+id: run-ai-locally
+title: Run AI on Your Own Machine
+audience: Builders
+description: The pieces for running language and image models locally instead of through a hosted API.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: ggml-org/llama.cpp
+    note: The inference engine many local tools are built on; runs models on CPUs and consumer GPUs.
+  - name: ollama/ollama
+    note: Download and run models with one command, behind a local API.
+  - name: open-webui/open-webui
+    note: A chat interface for local models, with Ollama and OpenAI-compatible backends.
+  - name: Comfy-Org/ComfyUI
+    note: Node-based workflows for image and video generation models.
+  - name: mudler/LocalAI
+    note: A self-hosted, OpenAI-compatible API in front of local models.
+  - name: vllm-project/vllm
+    note: High-throughput model serving, for when one machine has to serve many requests.

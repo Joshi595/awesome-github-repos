@@ -6,15 +6,18 @@ import {
   type DomainSummary,
   type HistoryEntry,
   type Momentum,
+  type NameMap,
   type RawSnapshot,
   type Repo,
   type ResolvedCollection,
   type Snapshot,
   type Taxonomy,
+  type WeeklyReport,
 } from '@agr/schema';
 import { byStarsDescending } from '../fetch/fetch-all';
 import { computeMomentum, historyMeta } from '../history/momentum';
 import { createHistoryEntry } from '../history/store';
+import { updateWeeklyReports } from '../history/weekly';
 import { createClassifier } from '../transform/classify';
 import { normalizeRepo } from '../transform/normalize';
 import { computeSimilar } from '../transform/similar';
@@ -37,12 +40,20 @@ export interface BuildInput {
   collections: readonly Collection[];
   /** Entries from earlier days. The snapshot's own day is derived from `raw`. */
   history: readonly HistoryEntry[];
+  /** Weekly reports finalised by earlier runs. */
+  weekly?: readonly WeeklyReport[];
+  /** Repository names seen by earlier runs. */
+  names?: NameMap;
 }
 
 export interface BuildResult {
   snapshot: Snapshot;
   /** The entry to append to the history store for the snapshot's day. */
   historyEntry: HistoryEntry;
+  /** Reports for weeks that have just ended, to be stored. */
+  weeklyToStore: WeeklyReport[];
+  /** `names` extended with every repository in this snapshot. */
+  names: NameMap;
   warnings: string[];
 }
 
@@ -130,16 +141,26 @@ export function buildSnapshot(input: BuildInput): BuildResult {
     similar: similar.get(repo.id) ?? [],
   }));
 
+  const names: NameMap = { ...input.names };
+  for (const repo of repositories) names[String(repo.id)] = repo.name;
+  const weekly = updateWeeklyReports({
+    current: historyEntry,
+    history: earlier,
+    stored: input.weekly ?? [],
+    names,
+  });
+
   const snapshot = SnapshotSchema.parse({
     schema_version: SNAPSHOT_SCHEMA_VERSION,
     generated_at: raw.generated_at,
     minimum_stars: raw.minimum_stars,
     repository_count: repositories.length,
-    history: historyMeta([...earlier.map((entry) => entry.date), date]),
+    history: historyMeta(historyEntry, earlier),
     domains: summariseDomains(taxonomy, repositories),
     collections: resolveCollections(input.collections, repositories, warnings),
+    weekly: weekly.reports,
     repositories,
   } satisfies Snapshot);
 
-  return { snapshot, historyEntry, warnings };
+  return { snapshot, historyEntry, weeklyToStore: weekly.toStore, names, warnings };
 }

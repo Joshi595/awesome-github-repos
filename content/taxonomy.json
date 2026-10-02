@@ -81,9 +81,10 @@
       "topics": [
         "ansible", "arduino", "aws", "azure", "backup", "clash", "cloud", "cloud-native", "containers",
         "devops", "distributed", "distributed-systems", "dns", "docker", "embedded", "esp32", "firmware",
-        "gfw", "grpc", "homelab", "infrastructure-as-code", "iot", "kernel", "kubernetes", "linux", "logging",
-        "message-queue", "messaging", "metrics", "microservices", "monitoring", "network", "networking",
-        "nginx", "observability", "operating-system", "prometheus", "proxy", "raspberry-pi", "self-hosted",
+        "bittorrent", "gfw", "grpc", "homelab", "http", "http-client", "http-server", "infrastructure-as-code",
+        "iot", "kernel", "kubernetes", "linux", "logging", "message-queue", "messaging", "metrics",
+        "microservices", "monitoring", "network", "networking", "nginx", "observability", "operating-system",
+        "p2p", "peer-to-peer", "prometheus", "protocol", "proxy", "quic", "raspberry-pi", "self-hosted",
         "serverless", "shadowsocks", "socks5", "storage", "terraform", "trojan", "tunnel", "v2ray",
         "virtualization", "vless", "vmess", "vpn", "wireguard", "xray"
       ],
@@ -100,7 +101,7 @@
       "label": "Developer Tools",
       "description": "Editors, terminals, CLIs, and tools that improve how software gets made.",
       "topics": [
-        "api", "automation", "bash", "build-tool", "ci", "ci-cd", "cli", "code-quality", "command-line",
+        "api", "bash", "build-tool", "ci", "ci-cd", "cli", "code-quality", "command-line",
         "command-line-tool", "continuous-integration", "debugging", "developer-tools", "devtools",
         "documentation", "dotfiles", "editor", "formatter", "git", "github", "ide", "linter", "neovim",
         "package-manager", "productivity", "shell", "static-analysis", "terminal", "testing", "text-editor",
@@ -160,6 +161,52 @@
         "wallpaper", "wallpapers"
       ],
       "languages": ["GDScript", "GLSL", "HLSL"]
+    },
+    {
+      "id": "finance-crypto",
+      "label": "Finance & Crypto",
+      "description": "Trading, quantitative finance, blockchains, and payments.",
+      "topics": [
+        "algorithmic-trading", "backtesting", "bitcoin", "blockchain", "crypto", "cryptocurrency", "defi",
+        "ethereum", "finance", "fintech", "investing", "payments", "quant", "quantitative-finance",
+        "smart-contracts", "solidity", "stock", "stock-market", "stocks", "trading", "trading-bot",
+        "trading-strategies", "web3"
+      ],
+      "keywords": [
+        "blockchain", "bitcoin", "ethereum", "cryptocurrency", "trading", "stock market", "quantitative finance",
+        "smart contracts", "web3", "backtesting", "payments"
+      ],
+      "languages": ["Solidity"]
+    },
+    {
+      "id": "automation-bots",
+      "label": "Bots & Automation",
+      "description": "Crawlers, chat bots, userscripts, and workflow automation.",
+      "topics": [
+        "automation", "bot", "crawler", "crawling", "discord", "discord-bot", "rpa", "scraper", "scraping",
+        "spider", "tampermonkey", "telegram", "telegram-bot", "userscript", "web-scraping", "wechat",
+        "workflow", "workflow-automation"
+      ],
+      "keywords": [
+        "bot", "bots", "crawler", "scraper", "scraping", "web scraping", "automation", "automate", "userscript",
+        "workflow automation", "爬虫"
+      ],
+      "languages": []
+    },
+    {
+      "id": "productivity-documents",
+      "label": "Productivity & Documents",
+      "description": "Notes, documents, office formats, email, and team tools.",
+      "topics": [
+        "calendar", "collaboration", "crm", "document", "documents", "email", "erp", "excel", "knowledge-base",
+        "mail", "markdown", "note-taking", "notes", "ocr", "office", "pdf", "presentation",
+        "project-management", "spreadsheet", "todo", "translate", "translation", "wiki", "xlsx"
+      ],
+      "keywords": [
+        "pdf", "markdown", "note-taking", "notes app", "knowledge base", "spreadsheet", "email", "ocr",
+        "translation", "wiki", "project management", "to-do", "todo"
+      ],
+      "languages": []
     },
     {
       "id": "learning",

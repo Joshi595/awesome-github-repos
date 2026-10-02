@@ -31,6 +31,11 @@ export function collectionPath(id: string): string {
   return href(`/collections/${id}/`);
 }
 
+/** The page for an ISO week such as `2026-W40`. */
+export function weekPath(week: string): string {
+  return href(`/weekly/${week.toLowerCase()}/`);
+}
+
 /** A link into the explorer with one filter applied. */
 export function explorePath(params: Record<string, string>): string {
   const query = new URLSearchParams(params).toString();

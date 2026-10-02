@@ -25,9 +25,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -36,7 +36,7 @@ jobs:
 
       - run: npm test
 
-      # Star history lives on its own branch so main stays code-only.
+      # Star history and weekly reports live on their own branch so main stays code-only.
       - name: Check out star history
         run: |
           if git fetch --depth 1 origin data:data 2>/dev/null; then
@@ -52,10 +52,13 @@ jobs:
 
       # Fails, and so keeps the current site, if the data looks wrong.
       - name: Build snapshot
-        run: npm run pipeline -- build --history-dir data-branch/history
+        run: >
+          npm run pipeline -- build
+          --history-dir data-branch/history
+          --weekly-dir data-branch/weekly
 
       - id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build site
         env:
@@ -63,14 +66,14 @@ jobs:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
         run: npm run build
 
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: apps/web/dist
 
       - name: Record star history
         working-directory: data-branch
         run: |
-          git add history
+          git add history weekly
           if git diff --cached --quiet; then
             echo "History unchanged."
           else
@@ -88,4 +91,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

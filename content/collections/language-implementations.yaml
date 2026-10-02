@@ -1,0 +1,22 @@
+id: language-implementations
+title: Languages and Runtimes
+audience: Engineers
+description: The source of the languages and runtimes much of this list is written in.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: rust-lang/rust
+    note: The Rust compiler and standard library.
+  - name: golang/go
+    note: The Go compiler, runtime, and standard library.
+  - name: python/cpython
+    note: The reference implementation of Python.
+  - name: microsoft/TypeScript
+    note: The TypeScript compiler and language service.
+  - name: nodejs/node
+    note: The JavaScript runtime that took the language to servers.
+  - name: denoland/deno
+    note: A JavaScript and TypeScript runtime with secure defaults.
+  - name: oven-sh/bun
+    note: A JavaScript runtime, bundler, and package manager in one binary.
+  - name: ziglang/zig
+    note: A small systems language and toolchain.

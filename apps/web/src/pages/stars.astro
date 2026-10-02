@@ -1,0 +1,20 @@
+---
+import { StarsApp } from '../components/stars/StarsApp';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Check my stars" description="Enter a GitHub username to see which top repositories they have starred, which are rising, and what they might like next.">
+  <header class="page-head">
+    <p class="eyebrow">Tools</p>
+    <h1>Check my stars</h1>
+    <p class="lede">
+      Enter a GitHub username to see how its stars line up with the list: what is rising among them, the big
+      projects still missing, and suggestions based on the topics it stars most.
+    </p>
+    <p class="hint">
+      Starred repositories are public, so no sign-in is needed. The lookup goes straight from your browser to
+      GitHub; this site stores nothing but the last username, in your browser.
+    </p>
+  </header>
+  <StarsApp client:load />
+</Base>

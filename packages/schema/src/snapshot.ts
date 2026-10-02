@@ -2,8 +2,9 @@ import { z } from 'zod';
 import { ResolvedCollectionSchema } from './collection';
 import { RepoSchema } from './repo';
 import { DomainSummarySchema } from './taxonomy';
+import { WeeklyReportSchema } from './weekly';
 
-export const SNAPSHOT_SCHEMA_VERSION = 1;
+export const SNAPSHOT_SCHEMA_VERSION = 2;
 
 /** One day of star counts, stored append-only on the `data` branch. */
 export const HistoryEntrySchema = z.object({
@@ -20,6 +21,8 @@ export const HistoryMetaSchema = z.object({
   days: z.number().int().nonnegative(),
   first: z.string().nullable(),
   last: z.string().nullable(),
+  /** The dates the weekly star samples (`momentum.spark`) were taken on, oldest first. */
+  samples: z.array(z.string()),
 });
 export type HistoryMeta = z.infer<typeof HistoryMetaSchema>;
 
@@ -33,6 +36,8 @@ export const SnapshotSchema = z
     history: HistoryMetaSchema,
     domains: z.array(DomainSummarySchema),
     collections: z.array(ResolvedCollectionSchema),
+    /** Weekly reports, newest first. The first may still be in progress. */
+    weekly: z.array(WeeklyReportSchema),
     repositories: z.array(RepoSchema),
   })
   .refine(

@@ -1,0 +1,93 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { WeeklyReport } from '@agr/schema';
+import MoverList from '../../components/weekly/MoverList.astro';
+import Base from '../../layouts/Base.astro';
+import { getSnapshot } from '../../lib/data';
+import { formatCompact, formatNumber } from '../../lib/format';
+import { href } from '../../lib/paths';
+import { weekBasis, weekRange, weekSummary, weekTitle } from '../../lib/weekly';
+
+export const getStaticPaths = (() =>
+  getSnapshot().weekly.map((report) => ({
+    params: { week: report.week.toLowerCase() },
+    props: { report },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  report: WeeklyReport;
+}
+
+const { report } = Astro.props;
+const threshold = formatCompact(getSnapshot().minimum_stars);
+const sections = [
+  {
+    id: 'gainers',
+    title: 'Most stars gained',
+    blurb: 'Raw gain over the period.',
+    items: report.gainers.map((mover) => ({ ...mover, figure: `+${formatCompact(mover.gain)}` })),
+    empty: 'No repository gained stars in this period.',
+  },
+  {
+    id: 'growth',
+    title: 'Fastest growing',
+    blurb: 'Gain relative to size at the start of the period.',
+    items: report.growth.map((mover) => ({ ...mover, figure: `+${(mover.growth * 100).toFixed(1)}%` })),
+    empty: 'No repository grew in this period.',
+  },
+  {
+    id: 'climbers',
+    title: 'Biggest rank climbers',
+    blurb: 'Places gained in the overall star ranking.',
+    items: report.climbers.map((mover) => ({ ...mover, figure: `▲ ${formatNumber(mover.places)}` })),
+    empty: 'No repository moved up the ranking in this period.',
+  },
+  {
+    id: 'entered',
+    title: `Joined the ${threshold} club`,
+    blurb: `Repositories that crossed ${threshold} stars.`,
+    items: report.entered,
+    empty: 'No repository joined the list in this period.',
+  },
+  {
+    id: 'left',
+    title: 'Left the list',
+    blurb: `Fell below ${threshold} stars, or were deleted or made private.`,
+    items: report.left,
+    empty: 'No repository left the list in this period.',
+  },
+];
+---
+
+<Base title={`${weekTitle(report)} report`} description={weekSummary(report)}>
+  <header class="page-head">
+    <p class="eyebrow"><a href={href('/weekly/')}>Weekly reports</a> · {weekRange(report)}</p>
+    <h1>{weekTitle(report)}</h1>
+    <p class="lede">{weekSummary(report)}</p>
+    <p class="hint">
+      {weekBasis(report)}
+      {!report.final && ' This week is still in progress, so the figures will change until it ends.'}
+    </p>
+  </header>
+
+  <dl class="stats stats-wide">
+    <div class="stat"><dt>Stars gained</dt><dd>{formatCompact(report.total_gain)}</dd></div>
+    <div class="stat"><dt>Repositories</dt><dd>{formatNumber(report.repository_count)}</dd></div>
+    <div class="stat"><dt>Joined</dt><dd>{formatNumber(report.entered.length)}</dd></div>
+    <div class="stat"><dt>Left</dt><dd>{formatNumber(report.left.length)}</dd></div>
+  </dl>
+
+  <div class="weekly-grid">
+    {
+      sections.map((section) => (
+        <section class="panel" aria-labelledby={`${section.id}-title`}>
+          <div class="section-head">
+            <h2 id={`${section.id}-title`}>{section.title}</h2>
+            <p>{section.blurb}</p>
+          </div>
+          <MoverList items={section.items} empty={section.empty} />
+        </section>
+      ))
+    }
+  </div>
+</Base>

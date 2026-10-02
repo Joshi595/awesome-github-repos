@@ -17,7 +17,7 @@ export function shiftDate(date: string, days: number): string {
 }
 
 /** Rank by stars within one day's entry; ties broken by id, as in the snapshot. */
-function ranksOf(entry: HistoryEntry): Map<string, number> {
+export function ranksOf(entry: HistoryEntry): Map<string, number> {
   const ordered = Object.entries(entry.stars).sort(
     (a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0]),
   );
@@ -40,6 +40,34 @@ function referenceFor(
   return null;
 }
 
+/** One sample per week, oldest first: the newest entry inside each 7-day slot ending today. */
+function weeklySamples(timeline: readonly HistoryEntry[], today: number): HistoryEntry[] {
+  const samples: HistoryEntry[] = [];
+  for (let week = SPARK_WEEKS - 1; week >= 0; week -= 1) {
+    const slotEnd = today - week * 7;
+    const sample = timeline.findLast((entry) => {
+      const day = toDay(entry.date);
+      return day <= slotEnd && day > slotEnd - 7;
+    });
+    if (sample) samples.push(sample);
+  }
+  return samples;
+}
+
+function timelineOf(current: HistoryEntry, history: readonly HistoryEntry[]): HistoryEntry[] {
+  const earlier = history
+    .filter((entry) => entry.date < current.date)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  return [...earlier, current];
+}
+
+/** The dates the sparkline samples fall on, so charts can label their points. */
+export function sampleDates(current: HistoryEntry, history: readonly HistoryEntry[]): string[] {
+  return weeklySamples(timelineOf(current, history), toDay(current.date)).map(
+    (entry) => entry.date,
+  );
+}
+
 /**
  * Derives each repository's momentum from the day's entry and the history
  * before it. Gains are scaled to the window when the reference snapshot is
@@ -50,10 +78,8 @@ export function computeMomentum(
   history: readonly HistoryEntry[],
 ): Map<number, Momentum> {
   const today = toDay(current.date);
-  const earlier = history
-    .filter((entry) => entry.date < current.date)
-    .sort((a, b) => a.date.localeCompare(b.date));
-  const timeline = [...earlier, current];
+  const timeline = timelineOf(current, history);
+  const earlier = timeline.slice(0, -1);
 
   const references = {
     d1: referenceFor(earlier, today, 1),
@@ -63,17 +89,7 @@ export function computeMomentum(
   const currentRanks = ranksOf(current);
   const referenceRanks = references.d7 ? ranksOf(references.d7.entry) : null;
 
-  // One sample per week, oldest first: the newest entry inside each 7-day slot.
-  const samples: HistoryEntry[] = [];
-  for (let week = SPARK_WEEKS - 1; week >= 0; week -= 1) {
-    const slotEnd = today - week * 7;
-    const sample = timeline.findLast((entry) => {
-      const day = toDay(entry.date);
-      return day <= slotEnd && day > slotEnd - 7;
-    });
-    if (sample) samples.push(sample);
-  }
-
+  const samples = weeklySamples(timeline, today);
   const oldest = earlier[0];
   const result = new Map<number, Momentum>();
 
@@ -106,7 +122,12 @@ export function computeMomentum(
   return result;
 }
 
-export function historyMeta(dates: readonly string[]): HistoryMeta {
-  const sorted = [...dates].sort();
-  return { days: sorted.length, first: sorted[0] ?? null, last: sorted.at(-1) ?? null };
+export function historyMeta(current: HistoryEntry, history: readonly HistoryEntry[]): HistoryMeta {
+  const timeline = timelineOf(current, history);
+  return {
+    days: timeline.length,
+    first: timeline[0]?.date ?? null,
+    last: current.date,
+    samples: sampleDates(current, history),
+  };
 }

@@ -1,0 +1,18 @@
+id: learn-by-building
+title: Learn by Building
+audience: Learners
+description: Study plans and project guides for people who learn best by making things.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: codecrafters-io/build-your-own-x
+    note: Step-by-step guides to recreating databases, shells, Git, and more.
+  - name: practical-tutorials/project-based-learning
+    note: Project tutorials grouped by programming language.
+  - name: nilbuild/developer-roadmap
+    note: Roadmaps showing what to learn, and in what order, for a given role.
+  - name: ossu/computer-science
+    note: A free, self-taught computer science curriculum built from online courses.
+  - name: jwasham/coding-interview-university
+    note: A multi-month study plan for software engineering interviews.
+  - name: rust-lang/rustlings
+    note: Small exercises that teach Rust by fixing failing code.

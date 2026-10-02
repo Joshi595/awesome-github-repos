@@ -1,0 +1,18 @@
+id: security-starter-kit
+title: Security Starter Kit
+audience: Engineers
+description: References and scanners for building software defensively and testing systems you are authorised to test.
+last_reviewed: '2026-10-02'
+repositories:
+  - name: OWASP/CheatSheetSeries
+    note: Concise guidance on specific application security topics.
+  - name: swisskyrepo/PayloadsAllTheThings
+    note: A reference of payloads and bypass techniques for security testing.
+  - name: danielmiessler/SecLists
+    note: Wordlists used during security assessments.
+  - name: projectdiscovery/nuclei
+    note: Template-driven vulnerability scanning.
+  - name: aquasecurity/trivy
+    note: Scans containers, dependencies, and infrastructure code for known issues.
+  - name: gitleaks/gitleaks
+    note: Finds secrets committed to Git repositories.

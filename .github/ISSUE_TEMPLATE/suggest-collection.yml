@@ -1,0 +1,39 @@
+name: Suggest a collection
+description: Propose a hand-picked set of repositories for a specific goal, or a change to an existing one.
+title: 'Collection: '
+labels: [collection]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Collections are short (three to eight repositories), aimed at one kind of reader, and every entry has a
+        sentence on why it is there. Every repository must already be in the list, so it needs 10,000+ stars.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: Rust for Systems Programmers
+    validations:
+      required: true
+  - type: input
+    id: audience
+    attributes:
+      label: Who is it for?
+      placeholder: Engineers moving from C or C++
+    validations:
+      required: true
+  - type: textarea
+    id: repositories
+    attributes:
+      label: Repositories and why
+      description: One per line, as `owner/name` followed by a sentence on what it adds.
+      placeholder: |
+        rust-lang/book - The official introduction, read front to back.
+        tokio-rs/tokio - The async runtime most networked Rust is built on.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: What you left out and why, or which existing collection this overlaps.

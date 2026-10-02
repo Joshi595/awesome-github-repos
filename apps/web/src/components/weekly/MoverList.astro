@@ -1,0 +1,40 @@
+---
+import { repoById } from '../../lib/data';
+import { formatCompact } from '../../lib/format';
+import { repoPath } from '../../lib/paths';
+
+interface Item {
+  id: number;
+  name: string;
+  stars: number;
+  /** The figure this list is ranked by, already formatted. */
+  figure?: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Shown when the list is empty. */
+  empty: string;
+}
+
+const { items, empty } = Astro.props;
+// A repository that has since left the list has no page here, so it links to GitHub instead.
+const link = (item: Item) => (repoById(item.id) ? repoPath(item.name) : `https://github.com/${item.name}`);
+---
+
+{
+  items.length === 0 ? (
+    <p class="hint">{empty}</p>
+  ) : (
+    <ol class="movers">
+      {items.map((item, index) => (
+        <li>
+          <span class="mover-rank">{index + 1}</span>
+          <a href={link(item)}>{item.name}</a>
+          <span class="mover-stars">★ {formatCompact(item.stars)}</span>
+          {item.figure && <span class="mover-figure">{item.figure}</span>}
+        </li>
+      ))}
+    </ol>
+  )
+}
