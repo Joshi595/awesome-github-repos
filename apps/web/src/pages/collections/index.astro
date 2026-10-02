@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getSnapshot } from '../../lib/data';
+import { collectionPath } from '../../lib/paths';
+
+const { collections } = getSnapshot();
+---
+
+<Base title="Collections" description="Hand-picked sets of repositories for a specific goal, each with a note on why it is included.">
+  <header class="page-head">
+    <p class="eyebrow">Editorial</p>
+    <h1>Collections</h1>
+    <p class="lede">
+      Short, hand-picked sets of repositories for a specific goal, each with a note on why it is there. A path
+      through the list rather than the whole list.
+    </p>
+  </header>
+
+  <ul class="card-grid">
+    {
+      collections.map((collection) => (
+        <li>
+          <a class="card" href={collectionPath(collection.id)}>
+            <span class="eyebrow">{collection.audience}</span>
+            <h2>{collection.title}</h2>
+            <p>{collection.description}</p>
+            <span class="card-foot">
+              {collection.entries.length} {collection.entries.length === 1 ? 'repository' : 'repositories'}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

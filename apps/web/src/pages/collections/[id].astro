@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { ResolvedCollection } from '@agr/schema';
+import RepoList from '../../components/repo/RepoList.astro';
+import Base from '../../layouts/Base.astro';
+import { getSnapshot, repoById } from '../../lib/data';
+import { formatDate } from '../../lib/format';
+import { explorePath, href } from '../../lib/paths';
+
+export const getStaticPaths = (() =>
+  getSnapshot().collections.map((collection) => ({
+    params: { id: collection.id },
+    props: { collection },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  collection: ResolvedCollection;
+}
+
+const { collection } = Astro.props;
+const items = collection.entries.flatMap((entry) => {
+  const repo = repoById(entry.id);
+  return repo ? [{ repo, note: entry.note }] : [];
+});
+---
+
+<Base title={collection.title} description={collection.description}>
+  <header class="page-head">
+    <p class="eyebrow"><a href={href('/collections/')}>Collections</a> · For {collection.audience.toLowerCase()}</p>
+    <h1>{collection.title}</h1>
+    <p class="lede">{collection.description}</p>
+    <p class="hint">
+      {`Last reviewed ${formatDate(collection.last_reviewed)}. `}
+      <a href={explorePath({ collection: collection.id })}>Open in the explorer</a> to search and filter within it.
+    </p>
+  </header>
+
+  <RepoList items={items} numbered />
+</Base>

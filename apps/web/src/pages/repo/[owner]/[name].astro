@@ -1,0 +1,219 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { Repo } from '@agr/schema';
+import RepoList from '../../../components/repo/RepoList.astro';
+import { CompareButton, SaveButton } from '../../../components/shortlist/SaveButton';
+import { Sparkline } from '../../../components/ui/Sparkline';
+import Base from '../../../layouts/Base.astro';
+import { getSnapshot, repoById, snapshotNow, TOPIC_PAGE_MIN, topicPageKeys } from '../../../lib/data';
+import {
+  activityLabel,
+  formatAge,
+  formatDate,
+  formatDuration,
+  formatNumber,
+  formatSigned,
+  languageColor,
+} from '../../../lib/format';
+import { collectionPath, explorePath, href, languagePath, topicPath } from '../../../lib/paths';
+
+export const getStaticPaths = (() =>
+  getSnapshot().repositories.map((repo) => {
+    const [owner = '', name = ''] = repo.name.split('/');
+    return { params: { owner, name }, props: { repo } };
+  })) satisfies GetStaticPaths;
+
+interface Props {
+  repo: Repo;
+}
+
+const { repo } = Astro.props;
+const snapshot = getSnapshot();
+const now = snapshotNow();
+const [, shortName = repo.name] = repo.name.split('/');
+const { momentum } = repo;
+const hasHistory = snapshot.history.days >= 2;
+const time = (value: string | null) => (value ? Date.parse(value) : null);
+
+const topicPages = topicPageKeys();
+const domains = repo.domains.flatMap((id) => snapshot.domains.find((domain) => domain.id === id) ?? []);
+const collections = snapshot.collections.flatMap((collection) => {
+  const entry = collection.entries.find((candidate) => candidate.id === repo.id);
+  return entry ? [{ collection, note: entry.note }] : [];
+});
+const similar = repo.similar.flatMap((id) => repoById(id) ?? []);
+
+const deltas = [
+  { label: 'Per day', value: momentum.d1 },
+  { label: 'Per 7 days', value: momentum.d7 },
+  { label: 'Per 30 days', value: momentum.d30 },
+  { label: 'Rank, 7 days', value: momentum.rank_delta_7 },
+];
+---
+
+<Base title={repo.name} description={repo.description ?? `${repo.name} on GitHub: ${formatNumber(repo.stars)} stars.`}>
+  <article class="repo-page">
+    <header class="repo-head">
+      <img src={repo.avatar_url ?? `https://github.com/${repo.owner}.png?size=128`} alt="" width="64" height="64" />
+      <div>
+        <p class="eyebrow">#{formatNumber(repo.rank)} of {formatNumber(snapshot.repository_count)} by stars</p>
+        <h1><span class="row-owner">{repo.owner}/</span>{shortName}</h1>
+        <p class="lede">{repo.description ?? 'No description provided.'}</p>
+        <div class="button-row">
+          <a class="button button-primary" href={repo.url} target="_blank" rel="noreferrer">Open on GitHub</a>
+          {
+            repo.homepage && (
+              <a class="button" href={repo.homepage} target="_blank" rel="noreferrer nofollow">
+                Website
+              </a>
+            )
+          }
+          <SaveButton client:load repoId={repo.id} name={repo.name} labelled />
+          <CompareButton client:load repoId={repo.id} name={repo.name} labelled />
+          <a class="button" href={href('/compare/')}>Open comparison</a>
+        </div>
+      </div>
+    </header>
+
+    <dl class="stats stats-wide">
+      <div class="stat"><dt>Stars</dt><dd>{formatNumber(repo.stars)}</dd></div>
+      <div class="stat"><dt>Forks</dt><dd>{formatNumber(repo.forks)}</dd></div>
+      <div class="stat">
+        <dt>Created</dt>
+        <dd title={repo.created_at ? formatDate(repo.created_at) : undefined}>
+          {formatDuration(time(repo.created_at), now)} ago
+        </dd>
+      </div>
+      <div class="stat">
+        <dt>Last push</dt>
+        <dd title={repo.pushed_at ? formatDate(repo.pushed_at) : undefined}>{formatAge(time(repo.pushed_at), now)}</dd>
+      </div>
+    </dl>
+
+    <div class="repo-columns">
+      <div>
+        <section class="section">
+          <h2>Momentum</h2>
+          {
+            hasHistory ? (
+              <>
+                <dl class="stats stats-wide">
+                  {deltas.map((delta) => (
+                    <div class="stat">
+                      <dt>{delta.label}</dt>
+                      <dd class={delta.value === null ? 'is-muted' : delta.value < 0 ? 'is-down' : 'is-up'}>
+                        {delta.value === null ? 'n/a' : formatSigned(delta.value)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                {momentum.spark.length > 1 && (
+                  <div class="repo-spark">
+                    <Sparkline values={momentum.spark} width={560} height={96} />
+                    <p class="hint">Stars across the last {momentum.spark.length} weekly samples.</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p class="hint">
+                {'Trend figures appear once a second daily snapshot has been recorded. See '}
+                <a href={href('/rising/')}>Rising</a> for what is available today.
+              </p>
+            )
+          }
+        </section>
+
+        {
+          similar.length > 0 && (
+            <section class="section">
+              <div class="section-head">
+                <h2>Similar repositories</h2>
+                <p>Ranked by how many distinctive topics they share with this one.</p>
+              </div>
+              <RepoList items={similar.map((other) => ({ repo: other }))} />
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="repo-side">
+        <section>
+          <h2>About</h2>
+          <dl class="facts">
+            {
+              repo.language && (
+                <>
+                  <dt>Language</dt>
+                  <dd>
+                    <a href={languagePath(repo.language)}>
+                      <i class="lang-dot" style={`background:${languageColor(repo.language)}`} />
+                      {repo.language}
+                    </a>
+                  </dd>
+                </>
+              )
+            }
+            <dt>Activity</dt>
+            <dd><span class={`badge badge-${repo.activity}`}>{activityLabel(repo.activity)}</span></dd>
+            <dt>License</dt>
+            <dd>{repo.license ?? 'None detected'}</dd>
+            <dt>Domain</dt>
+            <dd>
+              {
+                domains.map((domain, index) => (
+                  <>
+                    {index > 0 && ', '}
+                    <a href={explorePath({ domain: domain.id })}>{domain.label}</a>
+                  </>
+                ))
+              }
+            </dd>
+            {
+              repo.archived && (
+                <>
+                  <dt>Status</dt>
+                  <dd>Archived, read-only</dd>
+                </>
+              )
+            }
+          </dl>
+        </section>
+
+        {
+          repo.topics.length > 0 && (
+            <section>
+              <h2>Topics</h2>
+              <div class="row-topics">
+                {repo.topics.map((topic) => (
+                  <a
+                    class="topic"
+                    href={topicPages.has(topic) ? topicPath(topic) : explorePath({ q: topic })}
+                    title={topicPages.has(topic) ? undefined : `Fewer than ${TOPIC_PAGE_MIN} repositories use this topic`}
+                  >
+                    {topic}
+                  </a>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          collections.length > 0 && (
+            <section>
+              <h2>In collections</h2>
+              <ul class="plain-list">
+                {collections.map(({ collection, note }) => (
+                  <li>
+                    <a href={collectionPath(collection.id)}>{collection.title}</a>
+                    {note && <p class="hint">{note}</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </aside>
+    </div>
+  </article>
+</Base>

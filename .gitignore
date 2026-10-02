@@ -1,0 +1,24 @@
+# Local environment (Python venv holding Node + npm)
+venv_github/
+
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+
+# Generated data: snapshots, site data and local star history.
+# History is published on the `data` branch, never on main.
+# Anchored to the root: apps/web/src/pages/data/ is source code and must be tracked.
+/data/
+
+# Worktree of the `data` branch, created by the publish workflow
+/data-branch/
+
+# Editor and OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*

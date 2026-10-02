@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/paths';
+---
+
+<Base title="Page not found">
+  <div class="empty">
+    <h1>Page not found</h1>
+    <p>
+      That page does not exist. If you followed a link to a repository, it may have dropped below the star
+      threshold or been renamed.
+    </p>
+    <a class="button button-primary" href={href('/')}>Browse repositories</a>
+  </div>
+</Base>

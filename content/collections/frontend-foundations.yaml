@@ -1,0 +1,12 @@
+id: frontend-foundations
+title: Modern Frontend Foundations
+audience: Builders
+description: The major frameworks and tools behind contemporary web interfaces.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: react/react
+    note: A foundational UI library with a vast ecosystem.
+  - name: vuejs/core
+    note: The current Vue framework implementation.
+  - name: vercel/next.js
+    note: Production-ready React applications and rendering.

@@ -1,0 +1,14 @@
+id: developer-productivity
+title: Developer Productivity Stack
+audience: Builders
+description: Polished tools that improve the daily coding loop.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: microsoft/vscode
+    note: A flexible, widely adopted code editor.
+  - name: neovim/neovim
+    note: A fast, extensible editor for keyboard-first workflows.
+  - name: cli/cli
+    note: GitHub workflows from the command line.
+  - name: sharkdp/bat
+    note: A refined replacement for cat with useful defaults.

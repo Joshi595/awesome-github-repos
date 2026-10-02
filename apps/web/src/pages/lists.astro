@@ -1,0 +1,16 @@
+---
+import { ListsApp } from '../components/shortlist/ListsApp';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Your lists" description="Save GitHub repositories to named lists, export them as Markdown, and share them with a link.">
+  <header class="page-head">
+    <p class="eyebrow">Tools</p>
+    <h1>Your lists</h1>
+    <p class="lede">
+      Repositories you save are kept in this browser only: no account, nothing sent anywhere. Share a list with a
+      link, or export it as Markdown.
+    </p>
+  </header>
+  <ListsApp client:load />
+</Base>

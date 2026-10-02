@@ -1,0 +1,14 @@
+id: python-foundations
+title: Getting Started with Python
+audience: Learners
+description: A practical route from fundamentals to real-world Python tools.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: TheAlgorithms/Python
+    note: Read and run classic algorithms in approachable Python.
+  - name: vinta/awesome-python
+    note: A broad map of the Python ecosystem.
+  - name: EbookFoundation/free-programming-books
+    note: Free learning material for every stage.
+  - name: freeCodeCamp/freeCodeCamp
+    note: Structured practice and a global learning community.

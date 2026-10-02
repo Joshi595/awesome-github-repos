@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getSnapshot, languageGroups } from '../../lib/data';
+import { formatNumber, languageColor } from '../../lib/format';
+import { languagePath } from '../../lib/paths';
+
+const groups = languageGroups();
+const total = getSnapshot().repository_count;
+const largest = groups[0]?.repos.length ?? 1;
+---
+
+<Base title="Languages" description="Browse the most-starred GitHub repositories by primary programming language.">
+  <header class="page-head">
+    <p class="eyebrow">Browse</p>
+    <h1>Languages</h1>
+    <p class="lede">
+      {`Repositories by primary language, as reported by GitHub. The bar shows each language's share of the ${formatNumber(total)} repositories in the list.`}
+    </p>
+  </header>
+
+  <ul class="bar-list">
+    {
+      groups.map((group) => (
+        <li>
+          <a href={languagePath(group.label)}>
+            <span class="bar-label">
+              <i class="lang-dot" style={`background:${languageColor(group.label)}`} />
+              {group.label}
+            </span>
+            <span class="bar-track">
+              <span class="bar-fill" style={`width:${((group.repos.length / largest) * 100).toFixed(1)}%`} />
+            </span>
+            <span class="bar-value">
+              {formatNumber(group.repos.length)}
+              <small>{((group.repos.length / total) * 100).toFixed(1)}%</small>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

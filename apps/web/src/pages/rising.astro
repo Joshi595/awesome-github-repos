@@ -1,0 +1,128 @@
+---
+import type { Repo } from '@agr/schema';
+import RepoList from '../components/repo/RepoList.astro';
+import Base from '../layouts/Base.astro';
+import { getSnapshot, snapshotNow } from '../lib/data';
+import { formatCompact, formatDate, formatNumber } from '../lib/format';
+import { href } from '../lib/paths';
+
+const LIMIT = 20;
+const DAY_MS = 86_400_000;
+/** Lifetime velocity is only meaningful for repositories with some history behind them. */
+const MIN_AGE_DAYS = 14;
+
+const snapshot = getSnapshot();
+const now = snapshotNow();
+const repos = snapshot.repositories;
+const { history } = snapshot;
+const hasHistory = history.days >= 2;
+
+/** The repositories scoring highest on a positive metric. */
+function top(metric: (repo: Repo) => number | null) {
+  return repos
+    .flatMap((repo) => {
+      const value = metric(repo);
+      return value !== null && value > 0 ? [{ repo, value }] : [];
+    })
+    .sort((a, b) => b.value - a.value || a.repo.rank - b.repo.rank)
+    .slice(0, LIMIT);
+}
+
+const gained7 = top((repo) => repo.momentum.d7);
+const gained30 = top((repo) => repo.momentum.d30);
+const growth7 = top((repo) => {
+  const gain = repo.momentum.d7;
+  return gain === null || repo.stars - gain <= 0 ? null : gain / (repo.stars - gain);
+});
+const climbers = top((repo) => repo.momentum.rank_delta_7);
+const newcomers = repos.filter((repo) => repo.momentum.is_new).slice(0, LIMIT);
+const velocity = top((repo) => {
+  const created = repo.created_at ? Date.parse(repo.created_at) : Number.NaN;
+  const ageDays = (now - created) / DAY_MS;
+  return Number.isNaN(ageDays) || ageDays < MIN_AGE_DAYS ? null : repo.stars / ageDays;
+});
+
+const sections = [
+  {
+    id: 'week',
+    title: 'Most stars gained, 7 days',
+    blurb: 'Raw star gain per week. Big projects dominate here.',
+    items: gained7.map(({ repo, value }) => ({ repo, highlight: `+${formatCompact(value)} / 7d` })),
+  },
+  {
+    id: 'growth',
+    title: 'Fastest growing, 7 days',
+    blurb: 'Gain relative to size, which surfaces smaller projects that are taking off.',
+    items: growth7.map(({ repo, value }) => ({ repo, highlight: `+${(value * 100).toFixed(1)}% / 7d` })),
+  },
+  {
+    id: 'new',
+    title: `New to the ${formatCompact(snapshot.minimum_stars)} club`,
+    blurb: `Repositories that crossed ${formatNumber(snapshot.minimum_stars)} stars in the last two weeks.`,
+    items: newcomers.map((repo) => ({ repo, highlight: 'New' })),
+  },
+  {
+    id: 'climbers',
+    title: 'Biggest rank climbers, 7 days',
+    blurb: 'Places gained in the overall star ranking.',
+    items: climbers.map(({ repo, value }) => ({ repo, highlight: `▲ ${formatNumber(value)} places` })),
+  },
+  {
+    id: 'month',
+    title: 'Most stars gained, 30 days',
+    blurb: 'The same measure over a month, which smooths out one-day spikes.',
+    items: gained30.map(({ repo, value }) => ({ repo, highlight: `+${formatCompact(value)} / 30d` })),
+  },
+].filter((section) => hasHistory && section.items.length > 0);
+
+const velocitySection = {
+  id: 'velocity',
+  title: 'Fastest to get here',
+  blurb: 'Stars per day since the repository was created. Needs no history, so it is available from day one.',
+  items: velocity.map(({ repo, value }) => ({ repo, highlight: `${formatNumber(Math.round(value))} ★ / day` })),
+};
+const allSections = [...sections, velocitySection];
+---
+
+<Base title="Rising" description="The GitHub repositories gaining stars fastest: weekly and monthly gainers, new entrants to the 10k club, and rank climbers.">
+  <header class="page-head">
+    <p class="eyebrow">Momentum</p>
+    <h1>What is rising</h1>
+    <p class="lede">
+      A star count tells you where a project stands. These lists show where it is heading, using the daily snapshots
+      this site records.
+    </p>
+    {
+      hasHistory ? (
+        <p class="hint">
+          {`Based on ${history.days} snapshots between ${formatDate(history.first ?? snapshot.generated_at)} and ${formatDate(history.last ?? snapshot.generated_at)}. `}
+          Gains are scaled to the stated period when snapshots are further apart.
+        </p>
+      ) : (
+        <p class="notice">
+          {`Trend lists need at least two daily snapshots and only one has been recorded so far (${formatDate(snapshot.generated_at)}). `}
+          They will appear here after the next refresh. Until then, the list below works from each repository's age.
+        </p>
+      )
+    }
+    <nav class="jump" aria-label="Sections">
+      {allSections.map((section) => <a href={`#${section.id}`}>{section.title}</a>)}
+    </nav>
+  </header>
+
+  {
+    allSections.map((section) => (
+      <section class="section" id={section.id} aria-labelledby={`${section.id}-title`}>
+        <div class="section-head">
+          <h2 id={`${section.id}-title`}>{section.title}</h2>
+          <p>{section.blurb}</p>
+        </div>
+        <RepoList items={section.items} numbered />
+      </section>
+    ))
+  }
+
+  <p class="hint section">
+    Want the full list ordered by weekly gain? <a href={href('/?sort=gain7')}>Sort the explorer by “Fastest rising”</a>.
+  </p>
+</Base>

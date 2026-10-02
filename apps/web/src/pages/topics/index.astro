@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TOPIC_PAGE_MIN, topicGroups } from '../../lib/data';
+import { formatNumber } from '../../lib/format';
+import { topicPath } from '../../lib/paths';
+
+const groups = topicGroups();
+---
+
+<Base title="Topics" description="Browse the most-starred GitHub repositories by topic.">
+  <header class="page-head">
+    <p class="eyebrow">Browse</p>
+    <h1>Topics</h1>
+    <p class="lede">
+      The {formatNumber(groups.length)} GitHub topics used by at least {TOPIC_PAGE_MIN} repositories in the list,
+      most common first. Rarer topics are searchable in the explorer.
+    </p>
+  </header>
+
+  <ul class="tag-cloud">
+    {
+      groups.map((group) => (
+        <li>
+          <a class="tag" href={topicPath(group.key)}>
+            {group.label} <span class="count">{formatNumber(group.repos.length)}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

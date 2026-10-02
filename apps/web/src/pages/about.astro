@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import { getSnapshot } from '../lib/data';
+import { formatDate, formatNumber } from '../lib/format';
+import { href } from '../lib/paths';
+
+const snapshot = getSnapshot();
+const other = snapshot.domains.find((domain) => domain.id === 'other');
+---
+
+<Base title="About the data" description="Where the data comes from, how often it is refreshed, and how domains, momentum and similarity are worked out.">
+  <article class="prose">
+    <header class="page-head">
+      <p class="eyebrow">Method</p>
+      <h1>About the data</h1>
+      <p class="lede">
+        {`This site lists every public GitHub repository with at least ${formatNumber(snapshot.minimum_stars)} stars: ${formatNumber(snapshot.repository_count)} of them as of ${formatDate(snapshot.generated_at)}.`}
+      </p>
+    </header>
+
+    <h2>Where it comes from</h2>
+    <p>
+      Everything is read from GitHub's public search API. GitHub returns at most 1,000 results per search, so the
+      fetch splits the star range into slices that each stay under that limit and stitches them together. A
+      scheduled job does this once a day, rebuilds the site and publishes it. Nothing is scraped, and the site
+      has no server: it is static files plus the data you see.
+    </p>
+
+    <h2>What a rank means</h2>
+    <p>
+      Rank is position by star count at snapshot time, nothing more. Stars measure attention, not quality,
+      maintenance or fitness for your use. Ages and "last push" figures are measured from the snapshot time,
+      not from when you open the page.
+    </p>
+
+    <h2>Momentum</h2>
+    <p>
+      Each daily run stores every repository's star count. Gains per day, 7 days and 30 days compare today with
+      the nearest stored day at least that far back. If snapshots are further apart than the period, the gain is
+      scaled to the period, and if the nearest one is more than two weeks too old the figure is left out rather
+      than guessed. A repository is "new to the list" for two weeks after it first appears.
+      {
+        snapshot.history.days < 2
+          ? ' Only one snapshot exists so far, so these figures start with the next refresh.'
+          : ` ${snapshot.history.days} snapshots are currently in use.`
+      }
+    </p>
+
+    <h2>Domains</h2>
+    <p>
+      Domains are assigned from an editorial taxonomy, not by GitHub. A repository scores points for matching
+      topics, for whole-word matches in its name and description, and a little for its language. Language alone
+      is never enough: a Python web framework is not filed under machine learning just for being Python. A
+      repository with no clear signal lands in "Other" ({formatNumber(other?.count ?? 0)} today) instead of being
+      forced into a category.
+    </p>
+
+    <h2>Similar repositories</h2>
+    <p>
+      Similarity is topic overlap, weighted so that rare topics count for much more than common ones. Two
+      projects that both use <code>raft</code> are more alike than two that both use <code>python</code>.
+      Repositories without topics have no similar list.
+    </p>
+
+    <h2>Your lists and comparisons</h2>
+    <p>
+      Saved lists and the comparison selection live in your browser's local storage. They are never uploaded.
+      A share link carries the list inside the link itself, so whoever opens it gets their own copy.
+    </p>
+
+    <h2>Reuse</h2>
+    <p>
+      The full dataset behind this site is available as <a href={href('/data/snapshot.json')}>snapshot.json</a>.
+    </p>
+  </article>
+</Base>

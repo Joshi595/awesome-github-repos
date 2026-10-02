@@ -1,0 +1,16 @@
+---
+import { CompareApp } from '../components/compare/CompareApp';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Compare" description="Compare up to four GitHub repositories side by side: stars, momentum, activity, license and topics.">
+  <header class="page-head">
+    <p class="eyebrow">Tools</p>
+    <h1>Compare repositories</h1>
+    <p class="lede">
+      Put up to four repositories side by side. The leading value in each row is highlighted, and the address bar
+      always holds a link to the comparison you are looking at.
+    </p>
+  </header>
+  <CompareApp client:load />
+</Base>

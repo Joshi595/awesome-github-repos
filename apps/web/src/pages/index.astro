@@ -1,0 +1,39 @@
+---
+import { Explorer } from '../components/explorer/Explorer';
+import Base from '../layouts/Base.astro';
+import { getSiteIndex, getSnapshot, rowOf } from '../lib/data';
+
+const INITIAL_ROWS = 50;
+const FACET_TOPICS = 60;
+
+const snapshot = getSnapshot();
+const index = getSiteIndex();
+const count = (values: string[]) => {
+  const counts = new Map<string, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  return counts;
+};
+const languageCounts = count(snapshot.repositories.flatMap((repo) => repo.language ?? []));
+const topicCounts = count(snapshot.repositories.flatMap((repo) => repo.topics));
+
+// Enough for a useful first paint; the island swaps in exact facets once the dataset loads.
+const facets = {
+  domains: snapshot.domains,
+  languages: index.languages.map((value) => ({ value, count: languageCounts.get(value) ?? 0 })),
+  topics: index.topics.slice(0, FACET_TOPICS).map((value) => ({ value, count: topicCounts.get(value) ?? 0 })),
+  collections: snapshot.collections.map(({ id, title }) => ({ id, title })),
+};
+---
+
+<Base>
+  <h1 class="visually-hidden">GitHub repositories with 10,000+ stars</h1>
+  <Explorer
+    client:load
+    initialRepos={snapshot.repositories.slice(0, INITIAL_ROWS).map(rowOf)}
+    total={snapshot.repository_count}
+    generatedAt={snapshot.generated_at}
+    minimumStars={snapshot.minimum_stars}
+    hasHistory={snapshot.history.days >= 2}
+    facets={facets}
+  />
+</Base>

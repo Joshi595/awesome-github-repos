@@ -1,0 +1,38 @@
+{
+  "name": "awesome-github-repos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A self-refreshing directory of public GitHub repositories with 10,000+ stars.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @agr/web",
+    "build": "npm run build -w @agr/web",
+    "preview": "npm run preview -w @agr/web",
+    "pipeline": "tsx packages/pipeline/src/cli.ts",
+    "data:sample": "tsx packages/pipeline/src/cli.ts build --from-raw fixtures/sample-raw.json --no-history",
+    "data:fetch": "tsx packages/pipeline/src/cli.ts fetch && tsx packages/pipeline/src/cli.ts build",
+    "data:pull": "tsx packages/pipeline/src/cli.ts pull",
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/schema && tsc -p packages/pipeline && npm run check -w @agr/web",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
+  }
+}

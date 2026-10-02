@@ -1,0 +1,14 @@
+{
+  "name": "@agr/schema",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The data contract shared by the pipeline and the site.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./site-index": "./src/site-index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

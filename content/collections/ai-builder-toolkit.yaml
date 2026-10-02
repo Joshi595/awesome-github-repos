@@ -1,0 +1,12 @@
+id: ai-builder-toolkit
+title: Practical AI Builder Toolkit
+audience: Builders
+description: Core projects for experimenting with models, agents, and local AI.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: huggingface/transformers
+    note: The standard library for modern model workflows.
+  - name: ollama/ollama
+    note: Run and experiment with models locally.
+  - name: langchain-ai/langchain
+    note: Composable building blocks for AI applications.

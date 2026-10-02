@@ -1,0 +1,35 @@
+---
+import type { Repo } from '@agr/schema';
+import { rowOf, snapshotNow } from '../../lib/data';
+import { RepoRow } from './RepoRow';
+
+interface Item {
+  repo: Repo;
+  /** An accent figure, for lists ranked by something other than stars. */
+  highlight?: string;
+  note?: string;
+}
+
+interface Props {
+  items: Item[];
+  /** Number the rows 1..n instead of showing each repository's overall rank. */
+  numbered?: boolean;
+}
+
+const { items, numbered = false } = Astro.props;
+const now = snapshotNow();
+---
+
+<ol class="repo-list">
+  {
+    items.map((item, index) => (
+      <RepoRow
+        repo={rowOf(item.repo)}
+        now={now}
+        position={numbered ? index + 1 : undefined}
+        highlight={item.highlight}
+        note={item.note}
+      />
+    ))
+  }
+</ol>

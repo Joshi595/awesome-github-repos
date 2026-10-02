@@ -1,0 +1,12 @@
+id: systems-design-classics
+title: Systems Design Classics
+audience: Engineers
+description: References for building, understanding, and operating large systems.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: donnemartin/system-design-primer
+    note: A structured systems design study guide.
+  - name: kubernetes/kubernetes
+    note: The leading container orchestration platform.
+  - name: moby/moby
+    note: Core container tooling and architecture.

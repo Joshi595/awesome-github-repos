@@ -1,0 +1,183 @@
+{
+  "domains": [
+    {
+      "id": "ai-data",
+      "label": "AI & Machine Learning",
+      "description": "Models, agents, machine learning, and the tooling around them.",
+      "topics": [
+        "agent", "agent-skills", "agentic-ai", "agents", "ai", "ai-agent", "ai-agents", "ai-tools", "anthropic",
+        "artificial-intelligence", "chatbot", "chatgpt", "claude", "claude-code", "codex", "computer-vision",
+        "data-science", "deep-learning", "deepseek", "diffusion", "gemini", "generative-ai", "gpt", "gpt-4",
+        "image-generation", "langchain", "large-language-models", "llama", "llm", "llms", "machine-learning",
+        "mcp", "mcp-server", "ml", "natural-language-processing", "neural-network", "neural-networks", "nlp",
+        "ollama", "openai", "prompt-engineering", "pytorch", "rag", "reinforcement-learning",
+        "speech-recognition", "stable-diffusion", "tensorflow", "text-to-speech", "transformers", "tts"
+      ],
+      "keywords": [
+        "ai", "llm", "llms", "gpt", "chatgpt", "openai", "claude", "agentic", "ai agent", "ai agents",
+        "coding agent", "machine learning", "deep learning", "large language model", "large language models",
+        "neural network", "neural networks", "computer vision", "data science", "nlp", "stable diffusion",
+        "text-to-speech", "speech recognition", "pytorch", "tensorflow", "mcp", "rag",
+        "大模型", "人工智能", "机器学习", "深度学习"
+      ],
+      "languages": ["Jupyter Notebook"]
+    },
+    {
+      "id": "web-product",
+      "label": "Web & Frontend",
+      "description": "Frameworks, UI libraries, and tools for building for the web.",
+      "topics": [
+        "admin-dashboard", "angular", "blog", "bootstrap", "browser", "chrome-extension", "cms",
+        "component-library", "css", "css-framework", "dashboard", "django", "ecommerce", "express", "fastapi",
+        "flask", "frontend", "graphql", "html", "html5", "javascript", "jquery", "laravel", "nextjs", "nodejs",
+        "nuxt", "php", "rails", "react", "react-components", "reactjs", "rest-api", "ssr",
+        "static-site-generator", "svelte", "tailwindcss", "typescript", "ui", "ui-components", "vite", "vue",
+        "vuejs", "web", "web-development", "web-framework", "webpack"
+      ],
+      "keywords": [
+        "react", "vue", "angular", "svelte", "frontend", "front-end", "css", "html", "web framework",
+        "web app", "web apps", "web application", "web applications", "website", "websites", "user interface",
+        "ui components", "component library", "static site", "browser", "cms", "javascript framework"
+      ],
+      "languages": ["CSS", "HTML", "JavaScript", "TypeScript", "Vue", "Svelte", "PHP"]
+    },
+    {
+      "id": "mobile-desktop",
+      "label": "Mobile & Desktop",
+      "description": "Apps, frameworks, and utilities for phones and personal computers.",
+      "topics": [
+        "android", "android-app", "android-library", "cross-platform", "desktop", "desktop-app", "electron",
+        "flutter", "gui", "ios", "ios-app", "jetpack-compose", "kotlin", "mac", "macos", "material-design",
+        "mobile", "objective-c", "react-native", "swift", "swiftui", "tauri", "windows", "windows-10",
+        "windows-11"
+      ],
+      "keywords": [
+        "android", "ios", "macos", "iphone", "windows", "mobile app", "mobile apps", "desktop app",
+        "desktop application", "react native", "flutter", "swiftui", "cross-platform"
+      ],
+      "languages": ["Swift", "Kotlin", "Dart", "Objective-C"]
+    },
+    {
+      "id": "data-databases",
+      "label": "Databases & Data",
+      "description": "Databases, search, streaming, analytics, and data engineering.",
+      "topics": [
+        "analytics", "big-data", "cache", "data-engineering", "data-visualization", "database",
+        "distributed-database", "elasticsearch", "etl", "kafka", "key-value", "mongodb", "mysql", "nosql",
+        "olap", "orm", "postgres", "postgresql", "redis", "search-engine", "sql", "sqlite", "streaming",
+        "time-series", "vector-database", "visualization"
+      ],
+      "keywords": [
+        "database", "databases", "sql", "nosql", "postgres", "postgresql", "mysql", "sqlite", "redis",
+        "key-value", "search engine", "data pipeline", "data pipelines", "analytics", "orm", "time series",
+        "data visualization"
+      ],
+      "languages": ["PLpgSQL", "TSQL", "PLSQL"]
+    },
+    {
+      "id": "systems-infrastructure",
+      "label": "Systems & Infrastructure",
+      "description": "Cloud, containers, networking, operating systems, and hardware.",
+      "topics": [
+        "ansible", "arduino", "aws", "azure", "backup", "clash", "cloud", "cloud-native", "containers",
+        "devops", "distributed", "distributed-systems", "dns", "docker", "embedded", "esp32", "firmware",
+        "gfw", "grpc", "homelab", "infrastructure-as-code", "iot", "kernel", "kubernetes", "linux", "logging",
+        "message-queue", "messaging", "metrics", "microservices", "monitoring", "network", "networking",
+        "nginx", "observability", "operating-system", "prometheus", "proxy", "raspberry-pi", "self-hosted",
+        "serverless", "shadowsocks", "socks5", "storage", "terraform", "trojan", "tunnel", "v2ray",
+        "virtualization", "vless", "vmess", "vpn", "wireguard", "xray"
+      ],
+      "keywords": [
+        "kubernetes", "docker", "container", "containers", "cloud", "cloud-native", "infrastructure",
+        "container orchestration", "operating system", "kernel", "linux", "proxy", "reverse proxy", "vpn",
+        "distributed", "microservices", "monitoring", "observability", "self-hosted", "load balancer",
+        "serverless", "firmware", "embedded"
+      ],
+      "languages": ["C", "C++", "Go", "Rust", "Shell", "Assembly"]
+    },
+    {
+      "id": "developer-tools",
+      "label": "Developer Tools",
+      "description": "Editors, terminals, CLIs, and tools that improve how software gets made.",
+      "topics": [
+        "api", "automation", "bash", "build-tool", "ci", "ci-cd", "cli", "code-quality", "command-line",
+        "command-line-tool", "continuous-integration", "debugging", "developer-tools", "devtools",
+        "documentation", "dotfiles", "editor", "formatter", "git", "github", "ide", "linter", "neovim",
+        "package-manager", "productivity", "shell", "static-analysis", "terminal", "testing", "text-editor",
+        "tui", "vim", "vscode", "vscode-extension", "zsh"
+      ],
+      "keywords": [
+        "cli", "command line", "command-line", "terminal", "shell", "developer tool", "developer tools",
+        "code editor", "text editor", "ide", "vim", "neovim", "linter", "debugger", "git", "package manager",
+        "build tool", "build system", "testing framework", "dotfiles", "vscode"
+      ],
+      "languages": ["Vim Script", "Emacs Lisp", "Lua"]
+    },
+    {
+      "id": "languages-runtimes",
+      "label": "Languages & Runtimes",
+      "description": "Programming languages, compilers, interpreters, and runtimes.",
+      "topics": [
+        "compiler", "interpreter", "jit", "language", "parser", "programming-language", "runtime",
+        "virtual-machine", "wasm", "webassembly"
+      ],
+      "keywords": [
+        "programming language", "compiler", "compilers", "interpreter", "runtime", "virtual machine",
+        "webassembly", "transpiler"
+      ],
+      "languages": []
+    },
+    {
+      "id": "security",
+      "label": "Security & Privacy",
+      "description": "Security research, privacy, and defensive engineering.",
+      "topics": [
+        "2fa", "authentication", "bugbounty", "cryptography", "ctf", "cybersecurity", "encryption", "exploit",
+        "hacking", "infosec", "malware", "oauth", "osint", "password-manager", "pentest", "pentesting",
+        "privacy", "red-team", "reverse-engineering", "security", "security-tools", "vulnerability",
+        "web-security"
+      ],
+      "keywords": [
+        "security", "pentest", "pentesting", "penetration testing", "exploit", "exploits", "vulnerability",
+        "vulnerabilities", "encryption", "privacy", "password manager", "reverse engineering", "malware",
+        "authentication", "hacking", "security tool"
+      ],
+      "languages": []
+    },
+    {
+      "id": "creative-media",
+      "label": "Creative & Media",
+      "description": "Games, graphics, audio, video, and design.",
+      "topics": [
+        "3d", "animation", "audio", "canvas", "design", "drawing", "emulator", "ffmpeg", "font", "fonts",
+        "game", "game-development", "game-engine", "gamedev", "games", "godot", "graphics", "icons",
+        "image-processing", "music", "music-player", "photo", "pixel-art", "svg", "threejs", "unity", "video",
+        "video-player", "wallpaper", "webgl", "youtube"
+      ],
+      "keywords": [
+        "game", "games", "game engine", "video", "videos", "audio", "music", "icons", "font", "fonts",
+        "animation", "animations", "3d", "emulator", "creative coding", "media player", "image processing",
+        "wallpaper", "wallpapers"
+      ],
+      "languages": ["GDScript", "GLSL", "HLSL"]
+    },
+    {
+      "id": "learning",
+      "label": "Learning & Reference",
+      "description": "Courses, curated lists, interview prep, and engineering knowledge.",
+      "topics": [
+        "algorithms", "awesome", "awesome-list", "beginner", "best-practices", "book", "books", "cheatsheet",
+        "coding-interviews", "computer-science", "course", "courses", "curriculum", "design-patterns",
+        "education", "interview", "interview-preparation", "interview-questions", "learning", "leetcode",
+        "list", "lists", "resources", "roadmap", "system-design", "tutorial", "tutorials"
+      ],
+      "keywords": [
+        "awesome", "curated list", "tutorial", "tutorials", "course", "courses", "learn", "interview",
+        "interviews", "cheat sheet", "cheatsheet", "roadmap", "books", "handbook", "for beginners",
+        "from scratch", "algorithms", "study plan",
+        "教程", "面试", "学习", "入门"
+      ],
+      "languages": []
+    }
+  ]
+}

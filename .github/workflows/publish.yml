@@ -1,0 +1,91 @@
+name: Publish
+
+# Fetches fresh data, records the day's star counts, builds the site and deploys it to
+# GitHub Pages. One path for every trigger, so a code push and the daily refresh behave alike.
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # pushes the day's history to the data branch
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+env:
+  ASTRO_TELEMETRY_DISABLED: 1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      # Star history lives on its own branch so main stays code-only.
+      - name: Check out star history
+        run: |
+          if git fetch --depth 1 origin data:data 2>/dev/null; then
+            git worktree add data-branch data
+          else
+            git worktree add --orphan -b data data-branch
+          fi
+
+      - name: Fetch repositories from GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run pipeline -- fetch
+
+      # Fails, and so keeps the current site, if the data looks wrong.
+      - name: Build snapshot
+        run: npm run pipeline -- build --history-dir data-branch/history
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: apps/web/dist
+
+      - name: Record star history
+        working-directory: data-branch
+        run: |
+          git add history
+          if git diff --cached --quiet; then
+            echo "History unchanged."
+          else
+            git -c user.name="github-actions[bot]" \
+                -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -m "Star history for $(date -u +%F)"
+            git push origin data
+          fi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

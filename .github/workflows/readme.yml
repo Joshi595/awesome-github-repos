@@ -1,0 +1,50 @@
+name: Refresh README lists
+
+# Once a week, regenerates the README top list and lists/*.md and commits them to main.
+# The site is the live view; these Markdown lists are a convenience for reading on GitHub.
+on:
+  schedule:
+    - cron: '47 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readme
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch repositories from GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run pipeline -- fetch
+
+      # History is the publish workflow's job; this run only needs the current ranking.
+      - run: npm run pipeline -- build --no-history
+
+      - run: npm run pipeline -- readme
+
+      - name: Commit
+        run: |
+          git add README.md lists
+          if git diff --cached --quiet; then
+            echo "Lists unchanged."
+          else
+            git -c user.name="github-actions[bot]" \
+                -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -m "Refresh README lists for $(date -u +%F)"
+            git push
+          fi

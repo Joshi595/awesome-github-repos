@@ -1,0 +1,84 @@
+/*
+ * Design tokens. Dark is the base palette; light applies when the system asks
+ * for it or the visitor picks it with the theme toggle (data-theme wins both ways).
+ */
+:root {
+  color-scheme: dark;
+
+  --bg: #0d1014;
+  --surface: #14181e;
+  --surface-2: #1b2028;
+  --surface-hover: #1a1f27;
+  --border: #252b35;
+  --border-strong: #363e4b;
+  --text: #e7eaf0;
+  --text-2: #a6aebb;
+  --text-3: #727b8a;
+  --accent: #8e9bff;
+  --accent-strong: #aab4ff;
+  --accent-bg: rgb(142 155 255 / 13%);
+  --on-accent: #0d1014;
+  --up: #4cc38a;
+  --down: #f47067;
+  --star: #e3b341;
+  --backdrop: rgb(4 6 9 / 62%);
+  --shadow: 0 18px 50px rgb(0 0 0 / 50%);
+
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 14px;
+  --topbar-height: 52px;
+  --shell-width: 1360px;
+  --gutter: 20px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --surface: #f6f7f9;
+  --surface-2: #eceef2;
+  --surface-hover: #f1f3f6;
+  --border: #dfe3e8;
+  --border-strong: #c5ccd5;
+  --text: #16191d;
+  --text-2: #4b5461;
+  --text-3: #737c89;
+  --accent: #4551d6;
+  --accent-strong: #343fb5;
+  --accent-bg: rgb(69 81 214 / 9%);
+  --on-accent: #ffffff;
+  --up: #177a47;
+  --down: #c43a35;
+  --star: #b0741a;
+  --backdrop: rgb(22 25 29 / 38%);
+  --shadow: 0 18px 50px rgb(22 25 29 / 16%);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+
+    --bg: #ffffff;
+    --surface: #f6f7f9;
+    --surface-2: #eceef2;
+    --surface-hover: #f1f3f6;
+    --border: #dfe3e8;
+    --border-strong: #c5ccd5;
+    --text: #16191d;
+    --text-2: #4b5461;
+    --text-3: #737c89;
+    --accent: #4551d6;
+    --accent-strong: #343fb5;
+    --accent-bg: rgb(69 81 214 / 9%);
+    --on-accent: #ffffff;
+    --up: #177a47;
+    --down: #c43a35;
+    --star: #b0741a;
+    --backdrop: rgb(22 25 29 / 38%);
+    --shadow: 0 18px 50px rgb(22 25 29 / 16%);
+  }
+}

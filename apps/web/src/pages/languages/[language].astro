@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import RepoList from '../../components/repo/RepoList.astro';
+import Base from '../../layouts/Base.astro';
+import { languageGroups, type Group } from '../../lib/data';
+import { formatNumber } from '../../lib/format';
+import { explorePath, href } from '../../lib/paths';
+
+const PAGE_LIMIT = 100;
+
+export const getStaticPaths = (() =>
+  languageGroups().map((group) => ({ params: { language: group.key }, props: { group } }))) satisfies GetStaticPaths;
+
+interface Props {
+  group: Group;
+}
+
+const { group } = Astro.props;
+const shown = group.repos.slice(0, PAGE_LIMIT);
+---
+
+<Base
+  title={`${group.label} repositories`}
+  description={`The ${formatNumber(group.repos.length)} most-starred GitHub repositories written mainly in ${group.label}.`}
+>
+  <header class="page-head">
+    <p class="eyebrow"><a href={href('/languages/')}>Languages</a></p>
+    <h1>{group.label}</h1>
+    <p class="lede">
+      {formatNumber(group.repos.length)} repositories with 10k+ stars are written mainly in {group.label}.
+      {group.repos.length > PAGE_LIMIT && ` Showing the top ${PAGE_LIMIT}.`}
+    </p>
+    <p class="hint">
+      <a href={explorePath({ language: group.label })}>Open in the explorer</a> to search, filter and sort all of them.
+    </p>
+  </header>
+
+  <RepoList items={shown.map((repo) => ({ repo }))} numbered />
+</Base>

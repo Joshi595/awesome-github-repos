@@ -1,0 +1,108 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import { CommandPalette } from '../components/palette/CommandPalette';
+import { getSnapshot } from '../lib/data';
+import { formatDate, formatNumber } from '../lib/format';
+import { href } from '../lib/paths';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const SITE_NAME = 'awesome/repos';
+const snapshot = getSnapshot();
+const { title, description = `Explore the ${formatNumber(snapshot.repository_count)} public GitHub repositories with ${formatNumber(snapshot.minimum_stars)}+ stars: search, filter, track what is rising, compare, and save shortlists.` } =
+  Astro.props;
+
+const nav = [
+  { label: 'Explore', href: href('/') },
+  { label: 'Rising', href: href('/rising/') },
+  { label: 'Collections', href: href('/collections/') },
+  { label: 'Topics', href: href('/topics/') },
+  { label: 'Languages', href: href('/languages/') },
+  { label: 'Compare', href: href('/compare/') },
+  { label: 'Lists', href: href('/lists/') },
+];
+const palettePages = [...nav, { label: 'About the data', href: href('/about/') }];
+const path = Astro.url.pathname;
+const isCurrent = (target: string) => (target === href('/') ? path === target : path.startsWith(target));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} · ${SITE_NAME}` : `${SITE_NAME}: GitHub repositories with 10k+ stars`}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <script is:inline>
+      // Apply a saved theme before first paint. Without one, the system preference decides.
+      try {
+        const theme = localStorage.getItem('agr:theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="topbar">
+      <div class="shell topbar-inner">
+        <a class="brand" href={href('/')}>awesome<span>/</span>repos</a>
+        <nav class="nav" aria-label="Main">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+        <div class="topbar-actions">
+          <button type="button" class="palette-button" data-palette-open>
+            <span>Quick search</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+          <button type="button" class="icon-button" id="theme-toggle" aria-label="Switch between light and dark theme">
+            <svg class="icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path d="M8 1.5a6.5 6.5 0 1 0 0 13z" fill="currentColor"></path>
+              <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="shell">
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer-inner">
+        <span>
+          {formatNumber(snapshot.repository_count)} repositories · data from {formatDate(snapshot.generated_at)}
+        </span>
+        <span>Stars are a snapshot, not a verdict. <a href={href('/about/')}>About the data</a></span>
+      </div>
+    </footer>
+
+    <CommandPalette client:idle pages={palettePages} />
+
+    <script>
+      const root = document.documentElement;
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const current = root.dataset.theme ?? (systemDark ? 'dark' : 'light');
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('agr:theme', next);
+        } catch {
+          // The choice still applies to this page view.
+        }
+      });
+    </script>
+  </body>
+</html>

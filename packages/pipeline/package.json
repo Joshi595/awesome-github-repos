@@ -1,0 +1,11 @@
+{
+  "name": "@agr/pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fetches, classifies and exports the repository dataset.",
+  "dependencies": {
+    "@agr/schema": "^1.0.0",
+    "yaml": "^2.9.1"
+  }
+}

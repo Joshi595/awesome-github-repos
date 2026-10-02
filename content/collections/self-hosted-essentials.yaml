@@ -1,0 +1,12 @@
+id: self-hosted-essentials
+title: Self-Hosted Essentials
+audience: Independents
+description: Tools for owning more of your development and infrastructure stack.
+last_reviewed: '2026-09-17'
+repositories:
+  - name: awesome-selfhosted/awesome-selfhosted
+    note: A curated starting map for self-hosted software.
+  - name: docker/compose
+    note: Define and run multi-container applications.
+  - name: localstack/localstack
+    note: Develop cloud applications locally.
