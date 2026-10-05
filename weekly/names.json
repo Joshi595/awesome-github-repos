@@ -5282,6 +5282,7 @@
 "1086419061":"vectorize-io/hindsight",
 "1086436947":"andrewyng/context-hub",
 "1086488930":"huggingface/ml-intern",
+"1087077125":"itsfatduck/optimizerDuck",
 "1087192965":"shanraisshan/claude-code-best-practice",
 "1088558237":"Orchestra-Research/AI-Research-SKILLs",
 "1088705108":"adongwanai/AgentGuide",
@@ -5370,7 +5371,7 @@
 "1136666433":"blader/humanizer",
 "1137078255":"colbymchenry/codegraph",
 "1137212306":"op7418/Humanizer-zh",
-"1137711311":"Hmbown/Codewhale",
+"1137711311":"codewhale-hq/Codewhale",
 "1137846174":"xai-org/x-algorithm",
 "1138817132":"QwenLM/Qwen3-TTS",
 "1139782619":"waooAI/waoowaoo",
@@ -5406,7 +5407,7 @@
 "1155965274":"Donchitos/Claude-Code-Game-Studios",
 "1156956890":"zeroclaw-labs/zeroclaw",
 "1156960719":"millionco/react-doctor",
-"1156994049":"Untrivial-ai/agent-orchestrator",
+"1156994049":"OrchestratorInc/agent-orchestrator",
 "1157102282":"diegosouzapw/OmniRoute",
 "1157171418":"jundot/omlx",
 "1158096951":"refactoringhq/tolaria",
@@ -5532,6 +5533,7 @@
 "1211925923":"cloudflare/cloudflare-os",
 "1212163658":"kangarooking/cangjie-skill",
 "1212503250":"citrolabs/ego-lite",
+"1212562200":"YouMind-OpenLab/awesome-gpt-image-2",
 "1212769188":"cathrynlavery/diagram-design",
 "1213049020":"browser-use/browser-harness",
 "1214290850":"EvoLinkAI/awesome-gpt-image-2-API-and-Prompts",
@@ -5607,5 +5609,6 @@
 "1333399642":"google/artemis",
 "1359648985":"eternity4719/HowToLiveBetter",
 "1373655162":"browser-use/jev-ultrafast",
-"1375382253":"NandhaKishorM/laya"
+"1375382253":"NandhaKishorM/laya",
+"1385946301":"Niko1221/Strata"
 }
