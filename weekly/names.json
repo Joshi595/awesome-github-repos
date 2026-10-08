@@ -4921,7 +4921,7 @@
 "836642963":"black-forest-labs/flux",
 "836976013":"mihomo-party-org/clash-party",
 "837073921":"TheBoredTeam/boring.notch",
-"837911756":"feder-cr/dots",
+"837911756":"feder-cr/invisible_dots",
 "838212912":"chartdb/chartdb",
 "838253246":"microsoft/BitNet",
 "838542536":"humanlayer/humanlayer",
@@ -5003,6 +5003,7 @@
 "896335270":"punkpeye/awesome-mcp-servers",
 "896924279":"moeru-ai/airi",
 "897148306":"microsoft/TRELLIS",
+"897268988":"thesysdev/openui",
 "898102196":"chiphuyen/aie-book",
 "898304583":"cloudwego/eino",
 "898968194":"huggingface/smolagents",
@@ -5022,6 +5023,7 @@
 "910418754":"nanobrowser/nanobrowser",
 "910609716":"liquidslr/leetcode-company-wise-problems",
 "910986056":"browser-use/web-ui",
+"911256711":"apify/apify-mcp-server",
 "911303109":"iii-hq/iii",
 "912559512":"simstudioai/sim",
 "913030762":"vxcontrol/pentagi",
@@ -5445,6 +5447,7 @@
 "1170266927":"phuryn/pm-skills",
 "1170821064":"paperclipai/paperclip",
 "1171026502":"googleworkspace/cli",
+"1171833693":"Agents365-ai/drawio-skill",
 "1172117787":"AnInsomniacy/rayburst",
 "1172617973":"Flowseal/tg-ws-proxy",
 "1172781277":"greensock/gsap-skills",
@@ -5603,6 +5606,7 @@
 "1316527318":"yc-software/qm",
 "1318768894":"trycompai/crm",
 "1322012299":"firecrawl/anydoc",
+"1322250666":"boykopovar/AnyPS5",
 "1322954467":"pathwaycom/arc-task-gen",
 "1329849289":"lexmount/moli",
 "1331135699":"guillaumemeyer/watermarks-remover",
@@ -5616,5 +5620,6 @@
 "1373655162":"browser-use/jev-ultrafast",
 "1375382253":"NandhaKishorM/laya",
 "1385946301":"Niko1221/Strata",
-"1398080271":"storytold/photocraft"
+"1398080271":"storytold/photocraft",
+"1407950271":"openai/math"
 }
