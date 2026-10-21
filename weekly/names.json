@@ -4760,6 +4760,7 @@
 "730223430":"instantX-research/InstantID",
 "730534580":"infiniflow/ragflow",
 "731450488":"bleedline/aimoneyhunter",
+"733283939":"lipku/LiveTalking",
 "736272311":"pipecat-ai/pipecat",
 "736812439":"m87-labs/moondream",
 "737509032":"dyang886/Game-Cheats-Manager",
@@ -5254,6 +5255,7 @@
 "1052050442":"datawhalechina/hello-agents",
 "1052845083":"danielmiessler/LifeOS",
 "1053118194":"bojieli/ai-agent-book",
+"1054714122":"clashbk/clash",
 "1054790989":"openchamber/openchamber",
 "1054793726":"ChromeDevTools/chrome-devtools-mcp",
 "1057664813":"OpenBMB/VoxCPM",
@@ -5501,6 +5503,7 @@
 "1185389803":"MadsLorentzen/ai-job-search",
 "1185590488":"rohitg00/ai-engineering-from-scratch",
 "1186219527":"liketrek/TREK",
+"1186559664":"Companion-Inc/feynman",
 "1187377394":"dontbesilent2025/dbskill",
 "1187630119":"NVIDIA/SkillSpector",
 "1188180267":"mnfst/awesome-free-llm-apis",
@@ -5648,6 +5651,7 @@
 "1333321333":"anywhere-labs/dsh-desktop",
 "1333399642":"google/artemis",
 "1339256252":"YuJunZhiXue/dsh-purge",
+"1346499044":"jub0t/Concat",
 "1359648985":"eternity4719/HowToLiveBetter",
 "1373614120":"robbietilton/Compositor",
 "1373655162":"browser-use/jev-ultrafast",
@@ -5666,5 +5670,7 @@
 "1407950271":"openai/math",
 "1407951147":"google-research/harness2",
 "1408489772":"storytold/wordcraft",
-"1410124849":"wheresryan22/anatomy"
+"1410124849":"wheresryan22/anatomy",
+"1421825221":"deepseek-ai/DeepInfer",
+"1423101235":"Gathin23/cleanyourtv"
 }
