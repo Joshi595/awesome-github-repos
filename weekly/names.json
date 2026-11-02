@@ -2824,6 +2824,7 @@
 "121422840":"gruns/icecream",
 "121470383":"solana-labs/solana",
 "121539858":"NVIDIA/FastPhotoStyle",
+"121637551":"hoochanlon/hamuleite",
 "121647248":"roboticcam/machine-learning-notes",
 "121898717":"dani-garcia/vaultwarden",
 "122299416":"optuna/optuna",
@@ -5658,6 +5659,7 @@
 "1291501023":"oso95/scroll-world",
 "1291783779":"petergyang/no-ai-slop",
 "1293600453":"TencentCloud/Octop",
+"1296300799":"jakubkrehel/skills",
 "1296584905":"AhmadHassan-BTed/Turnitout-Humanizer",
 "1297316519":"MDX-Tom/gpt-instruct",
 "1299769220":"openai/codex-security",
@@ -5693,6 +5695,7 @@
 "1339970099":"peach-mitao/peach",
 "1346499044":"jub0t/Concat",
 "1359648985":"eternity4719/HowToLiveBetter",
+"1368596582":"google/elephant-goldfish-model",
 "1373614120":"robbietilton/Compositor",
 "1373655162":"browser-use/jev-ultrafast",
 "1375382253":"NandhaKishorM/laya",
@@ -5718,5 +5721,6 @@
 "1416502082":"seedds/nxnative",
 "1421825221":"deepseek-ai/DeepInfer",
 "1423101235":"Gathin23/cleanyourtv",
-"1423892373":"Zagitta/gpu-unlock"
+"1423892373":"Zagitta/gpu-unlock",
+"1440705679":"deepseek-ai/dsh-superagent-prototype"
 }
