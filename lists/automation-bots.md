@@ -2,76 +2,76 @@
 
 Crawlers, chat bots, userscripts, and workflow automation.
 
-Top 69 of 69 repositories, as of 2026-11-02. Generated file: do not edit by hand.
+Top 69 of 69 repositories, as of 2026-11-09. Generated file: do not edit by hand.
 
 | # | Repository | Stars | Language | Description |
 | ---: | --- | ---: | --- | --- |
-| 1 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 209,366 | TypeScript | Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations. |
-| 2 | [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) | 92,468 | Python | 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ… |
-| 3 | [NanmiCoder/MediaCrawler](https://github.com/NanmiCoder/MediaCrawler) | 69,861 | Python | 小红书笔记 \| 评论爬虫、抖音视频 \| 评论爬虫、快手视频 \| 评论爬虫、B 站视频 ｜ 评论爬虫、微博帖子 ｜ 评论爬虫、百度贴吧帖子 ｜ 百度贴吧评论回复爬虫 \| 知乎问答文章｜评论爬虫 |
-| 4 | [scrapy/scrapy](https://github.com/scrapy/scrapy) | 65,177 | Python | Scrapy, a fast high-level web crawling & scraping framework for Python. |
-| 5 | [justjavac/wechat-miniapp-radar](https://github.com/justjavac/wechat-miniapp-radar) | 51,179 | TypeScript | :traffic_light:小程序雷达：AI 驱动的小程序技术选型、趋势追踪和迁移诊断工具 |
-| 6 | [huginn/huginn](https://github.com/huginn/huginn) | 50,267 | Ruby | Create agents that monitor and act on your behalf. Your agents are standing by! |
-| 7 | [DIYgod/RSSHub](https://github.com/DIYgod/RSSHub) | 46,774 | TypeScript | 🧡 Everything is RSSible |
-| 8 | [NaiboWang/EasySpider](https://github.com/NaiboWang/EasySpider) | 44,766 | JavaScript | A visual no-code/code-free web crawler/spider易采集：一个可视化浏览器自动化测试/数据采集/网页爬虫软件，可以无代码图形化的设计和执行爬虫任务。别名：ServiceWrapper面向Web应用的智能化服务封装系统。 |
-| 9 | [maboloshi/github-chinese](https://github.com/maboloshi/github-chinese) | 37,534 | JavaScript | GitHub 汉化插件，GitHub 中文化界面。 (GitHub Translation To Chinese) |
-| 10 | [hmjz100/LinkSwift](https://github.com/hmjz100/LinkSwift) | 37,413 | JavaScript | 一个基于 JavaScript 的网盘文件下载地址获取工具。基于【网盘直链下载助手】修改 ，支持 百度网盘 / 阿里云盘 / 中国移动云盘 / 天翼云盘 / 迅雷云盘 / 夸克网盘 / UC网盘 / 123云盘 八大网盘 |
-| 11 | [telegramdesktop/tdesktop](https://github.com/telegramdesktop/tdesktop) | 33,434 | C++ | Telegram Desktop messaging app |
-| 12 | [binarywang/WxJava](https://github.com/binarywang/WxJava) | 33,175 | Java | 微信开发 Java SDK ，支持包括微信支付，开放平台，小程序，企业微信，视频号，公众号等的后端开发 |
-| 13 | [gulpjs/gulp](https://github.com/gulpjs/gulp) | 32,917 | JavaScript | A toolkit to automate & enhance your workflow |
-| 14 | [CloakHQ/CloakBrowser](https://github.com/CloakHQ/CloakBrowser) | 32,692 | Python | Stealth Chromium that passes every bot detection test. Drop-in Playwright replacement with source-level fingerprint patches. 50+ tests passed. |
-| 15 | [ScrapeGraphAI/Scrapegraph-ai](https://github.com/ScrapeGraphAI/Scrapegraph-ai) | 32,435 | Python | Python scraper based on AI |
-| 16 | [FujiwaraChoki/MoneyPrinterV2](https://github.com/FujiwaraChoki/MoneyPrinterV2) | 32,279 | Python | Automate the process of making money online. |
-| 17 | [the1812/Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) | 30,986 | TypeScript | 强大的哔哩哔哩增强脚本 |
-| 18 | [jobbole/awesome-python-cn](https://github.com/jobbole/awesome-python-cn) | 30,684 | Makefile | Python资源大全中文版，包括：Web框架、网络爬虫、模板引擎、数据库、数据可视化、图片处理等，由「开源前哨」和「Python开发者」微信公号团队维护更新。 |
-| 19 | [DrKLO/Telegram](https://github.com/DrKLO/Telegram) | 30,206 | Java | Telegram for Android source |
-| 20 | [sipeed/picoclaw](https://github.com/sipeed/picoclaw) | 30,083 | Go | Tiny, Fast, and Deployable anywhere — automate the mundane, unleash your creativity |
-| 21 | [python-telegram-bot/python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) | 29,545 | Python | We have made you a wrapper you can't refuse |
-| 22 | [ariya/phantomjs](https://github.com/ariya/phantomjs) | 29,421 | C++ | Scriptable Headless Browser |
-| 23 | [discordjs/discord.js](https://github.com/discordjs/discord.js) | 26,829 | TypeScript | A powerful JavaScript library for interacting with the Discord API |
-| 24 | [apify/crawlee](https://github.com/apify/crawlee) | 26,316 | TypeScript | Crawlee—A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or… |
-| 25 | [gocolly/colly](https://github.com/gocolly/colly) | 25,572 | Go | Elegant Scraper and Crawler Framework for Golang |
-| 26 | [semantic-release/semantic-release](https://github.com/semantic-release/semantic-release) | 24,150 | JavaScript | 📦🚀 Fully automated version management and package publishing |
-| 27 | [PrefectHQ/prefect](https://github.com/PrefectHQ/prefect) | 24,109 | Python | Prefect is a workflow orchestration framework for building resilient data pipelines in Python. |
-| 28 | [AZeC4/TelegramGroup](https://github.com/AZeC4/TelegramGroup) | 23,889 | - | 2026最新悄咪咪收集的10000+个Telegram群合集，附全网最有趣好用的机器人BOT🤖【dianbaodaohang.com】 |
-| 29 | [wechaty/wechaty](https://github.com/wechaty/wechaty) | 23,472 | TypeScript | Conversational RPA SDK for Chatbot Makers. Join our Discord: https://discord.gg/7q8NBZbQzt |
-| 30 | [putyy/res-downloader](https://github.com/putyy/res-downloader) | 21,054 | Go | 视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载! |
-| 31 | [Jack-Cherish/python-spider](https://github.com/Jack-Cherish/python-spider) | 19,839 | Python | :rainbow:Python3网络爬虫实战：淘宝、京东、网易云、B站、12306、抖音、笔趣阁、漫画小说下载、音乐电影下载等 |
-| 32 | [InstaPy/InstaPy](https://github.com/InstaPy/InstaPy) | 18,352 | Python | 📷 Instagram Bot - Tool for automated Instagram interactions |
-| 33 | [getmaxun/maxun](https://github.com/getmaxun/maxun) | 18,134 | TypeScript | Turn any website into a structured API. Extract, automate, search and monitor the web. |
-| 34 | [hubotio/hubot](https://github.com/hubotio/hubot) | 16,795 | JavaScript | A customizable life embetterment robot. |
-| 35 | [binux/pyspider](https://github.com/binux/pyspider) | 16,750 | Python | A Powerful Spider(Web Crawler) System in Python. |
-| 36 | [tgbot-collection/YYeTsBot](https://github.com/tgbot-collection/YYeTsBot) | 16,306 | Python | 🎬 人人影视 机器人和网站，包含人人影视全部资源以及众多网友的网盘分享 |
-| 37 | [Kr1s77/awesome-python-login-model](https://github.com/Kr1s77/awesome-python-login-model) | 16,224 | Python | 😮python模拟登陆一些大型网站，还有一些简单的爬虫，希望对你们有所帮助❤️，如果喜欢记得给个star哦🌟 |
-| 38 | [Rapptz/discord.py](https://github.com/Rapptz/discord.py) | 16,201 | Python | An API wrapper for Discord written in Python. |
-| 39 | [codelucas/newspaper](https://github.com/codelucas/newspaper) | 15,182 | Python | newspaper3k is a news, full-text, and article metadata extraction in Python 3. Advanced docs: |
-| 40 | [microsoft/playwright-python](https://github.com/microsoft/playwright-python) | 15,086 | Python | Python version of the Playwright testing and automation library. |
-| 41 | [shengqiangzhang/examples-of-web-crawlers](https://github.com/shengqiangzhang/examples-of-web-crawlers) | 14,709 | HTML | 一些非常有趣的python爬虫例子,对新手比较友好,主要爬取淘宝、天猫、微信、微信读书、豆瓣、QQ等网站。(Some interesting examples of python crawlers that are friendly to beginners. ) |
-| 42 | [Vendicated/Vencord](https://github.com/Vendicated/Vencord) | 14,400 | TypeScript | The cutest Discord modification |
-| 43 | [FujiwaraChoki/MoneyPrinter](https://github.com/FujiwaraChoki/MoneyPrinter) | 14,133 | Python | Automate Creation of YouTube Shorts using MoviePy. |
-| 44 | [automatisch/automatisch](https://github.com/automatisch/automatisch) | 14,007 | JavaScript | The open source Zapier alternative. Build workflow automation without spending time and money. |
-| 45 | [s0md3v/Photon](https://github.com/s0md3v/Photon) | 13,317 | Python | Incredibly fast crawler designed for OSINT. |
-| 46 | [seleniumbase/SeleniumBase](https://github.com/seleniumbase/SeleniumBase) | 13,220 | Python | 📊 The best API for Web Automation, Scraping, and End-to-End Testing. 🐙 CDP Mode launches stealth browsers that bypass CAPTCHAs & detection. Adds stealth to P… |
-| 47 | [capistrano/capistrano](https://github.com/capistrano/capistrano) | 13,011 | Ruby | A deployment automation tool built on Ruby, Rake, and SSH. |
-| 48 | [ultrafunkamsterdam/undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver) | 12,895 | Python | Custom Selenium Chromedriver \| Zero-Config \| Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM) |
-| 49 | [clearw5/Auto.js](https://github.com/clearw5/Auto.js) | 12,856 | - | Automation&Workflow JavaScript IDE on Android(安卓平台上的JavaScript编程IDE) |
-| 50 | [octalmage/robotjs](https://github.com/octalmage/robotjs) | 12,782 | C | Node.js Desktop Automation. |
-| 51 | [g1879/DrissionPage](https://github.com/g1879/DrissionPage) | 12,555 | Python | Python based web automation tool. Powerful and elegant. |
-| 52 | [Tyrrrz/DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter) | 12,310 | C# | Saves Discord chat logs to a file |
-| 53 | [crawlab-team/crawlab](https://github.com/crawlab-team/crawlab) | 12,290 | Go | Distributed web crawler admin platform for spiders management regardless of languages and frameworks. 分布式爬虫管理平台，支持任何语言和框架 |
-| 54 | [talkgo/night](https://github.com/talkgo/night) | 12,280 | Go | Weekly Go Online Meetup via Bilibili｜Go 夜读｜通过 bilibili 在线直播的方式分享 Go 相关的技术话题，每天大家在微信/telegram/Slack 上及时沟通交流编程技术话题。 |
-| 55 | [jo-inc/camofox-browser](https://github.com/jo-inc/camofox-browser) | 12,117 | JavaScript | Stealth headless browser for AI agents — bypass Cloudflare, bot detection, and anti-scraping. Drop-in Puppeteer/Playwright replacement. |
-| 56 | [LonamiWebs/Telethon](https://github.com/LonamiWebs/Telethon) | 12,064 | Python | Pure Python 3 MTProto API Telegram client library, for bots too! |
-| 57 | [robotframework/robotframework](https://github.com/robotframework/robotframework) | 11,979 | Python | Generic automation framework for acceptance testing and RPA |
-| 58 | [pwxcoo/chinese-xinhua](https://github.com/pwxcoo/chinese-xinhua) | 11,747 | Python | :orange_book: 中华新华字典数据库。包括歇后语，成语，词语，汉字。 |
-| 59 | [code4craft/webmagic](https://github.com/code4craft/webmagic) | 11,670 | Java | A scalable web crawler framework for Java. |
-| 60 | [howdyai/botkit](https://github.com/howdyai/botkit) | 11,584 | TypeScript | Botkit is an open source developer tool for building chat bots, apps and custom integrations for major messaging platforms. |
+| 1 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 209,915 | TypeScript | Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations. |
+| 2 | [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) | 100,394 | Python | 🕷️ The BEST Web Scraping framework that handles everything from a single request to a full-scale crawl! Don't be shy, join here: https://discord.gg/EMgGbDceNQ… |
+| 3 | [NanmiCoder/MediaCrawler](https://github.com/NanmiCoder/MediaCrawler) | 70,735 | Python | 小红书笔记 \| 评论爬虫、抖音视频 \| 评论爬虫、快手视频 \| 评论爬虫、B 站视频 ｜ 评论爬虫、微博帖子 ｜ 评论爬虫、百度贴吧帖子 ｜ 百度贴吧评论回复爬虫 \| 知乎问答文章｜评论爬虫 |
+| 4 | [scrapy/scrapy](https://github.com/scrapy/scrapy) | 65,289 | Python | Scrapy, a fast high-level web crawling & scraping framework for Python. |
+| 5 | [justjavac/wechat-miniapp-radar](https://github.com/justjavac/wechat-miniapp-radar) | 51,172 | TypeScript | :traffic_light:小程序雷达：AI 驱动的小程序技术选型、趋势追踪和迁移诊断工具 |
+| 6 | [huginn/huginn](https://github.com/huginn/huginn) | 50,451 | Ruby | Create agents that monitor and act on your behalf. Your agents are standing by! |
+| 7 | [DIYgod/RSSHub](https://github.com/DIYgod/RSSHub) | 46,886 | TypeScript | 🧡 Everything is RSSible |
+| 8 | [NaiboWang/EasySpider](https://github.com/NaiboWang/EasySpider) | 44,773 | JavaScript | A visual no-code/code-free web crawler/spider易采集：一个可视化浏览器自动化测试/数据采集/网页爬虫软件，可以无代码图形化的设计和执行爬虫任务。别名：ServiceWrapper面向Web应用的智能化服务封装系统。 |
+| 9 | [hmjz100/LinkSwift](https://github.com/hmjz100/LinkSwift) | 39,036 | JavaScript | 一个基于 JavaScript 的网盘文件下载地址获取工具。基于【网盘直链下载助手】修改 ，支持 百度网盘 / 阿里云盘 / 中国移动云盘 / 天翼云盘 / 迅雷云盘 / 夸克网盘 / UC网盘 / 123云盘 八大网盘 |
+| 10 | [maboloshi/github-chinese](https://github.com/maboloshi/github-chinese) | 38,126 | JavaScript | GitHub 汉化插件，GitHub 中文化界面。 (GitHub Translation To Chinese) |
+| 11 | [telegramdesktop/tdesktop](https://github.com/telegramdesktop/tdesktop) | 33,514 | C++ | Telegram Desktop messaging app |
+| 12 | [binarywang/WxJava](https://github.com/binarywang/WxJava) | 33,193 | Java | 微信开发 Java SDK ，支持包括微信支付，开放平台，小程序，企业微信，视频号，公众号等的后端开发 |
+| 13 | [gulpjs/gulp](https://github.com/gulpjs/gulp) | 32,913 | JavaScript | A toolkit to automate & enhance your workflow |
+| 14 | [CloakHQ/CloakBrowser](https://github.com/CloakHQ/CloakBrowser) | 32,794 | Python | Stealth Chromium that passes every bot detection test. Drop-in Playwright replacement with source-level fingerprint patches. 50+ tests passed. |
+| 15 | [ScrapeGraphAI/Scrapegraph-ai](https://github.com/ScrapeGraphAI/Scrapegraph-ai) | 32,658 | Python | Python scraper based on AI |
+| 16 | [FujiwaraChoki/MoneyPrinterV2](https://github.com/FujiwaraChoki/MoneyPrinterV2) | 32,365 | Python | Automate the process of making money online. |
+| 17 | [the1812/Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) | 31,050 | TypeScript | 强大的哔哩哔哩增强脚本 |
+| 18 | [jobbole/awesome-python-cn](https://github.com/jobbole/awesome-python-cn) | 30,688 | Makefile | Python资源大全中文版，包括：Web框架、网络爬虫、模板引擎、数据库、数据可视化、图片处理等，由「开源前哨」和「Python开发者」微信公号团队维护更新。 |
+| 19 | [DrKLO/Telegram](https://github.com/DrKLO/Telegram) | 30,248 | Java | Telegram for Android source |
+| 20 | [sipeed/picoclaw](https://github.com/sipeed/picoclaw) | 30,115 | Go | Tiny, Fast, and Deployable anywhere — automate the mundane, unleash your creativity |
+| 21 | [python-telegram-bot/python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot) | 29,566 | Python | We have made you a wrapper you can't refuse |
+| 22 | [ariya/phantomjs](https://github.com/ariya/phantomjs) | 29,414 | C++ | Scriptable Headless Browser |
+| 23 | [discordjs/discord.js](https://github.com/discordjs/discord.js) | 26,828 | TypeScript | A powerful JavaScript library for interacting with the Discord API |
+| 24 | [apify/crawlee](https://github.com/apify/crawlee) | 26,394 | TypeScript | Crawlee—A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or… |
+| 25 | [gocolly/colly](https://github.com/gocolly/colly) | 25,581 | Go | Elegant Scraper and Crawler Framework for Golang |
+| 26 | [semantic-release/semantic-release](https://github.com/semantic-release/semantic-release) | 24,165 | JavaScript | 📦🚀 Fully automated version management and package publishing |
+| 27 | [PrefectHQ/prefect](https://github.com/PrefectHQ/prefect) | 24,141 | Python | Prefect is a workflow orchestration framework for building resilient data pipelines in Python. |
+| 28 | [AZeC4/TelegramGroup](https://github.com/AZeC4/TelegramGroup) | 23,950 | - | 2026最新悄咪咪收集的10000+个Telegram群合集，附全网最有趣好用的机器人BOT🤖【dianbaodaohang.com】 |
+| 29 | [wechaty/wechaty](https://github.com/wechaty/wechaty) | 23,534 | TypeScript | Conversational RPA SDK for Chatbot Makers. Join our Discord: https://discord.gg/7q8NBZbQzt |
+| 30 | [putyy/res-downloader](https://github.com/putyy/res-downloader) | 21,184 | Go | 视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载! |
+| 31 | [Jack-Cherish/python-spider](https://github.com/Jack-Cherish/python-spider) | 19,853 | Python | :rainbow:Python3网络爬虫实战：淘宝、京东、网易云、B站、12306、抖音、笔趣阁、漫画小说下载、音乐电影下载等 |
+| 32 | [InstaPy/InstaPy](https://github.com/InstaPy/InstaPy) | 18,377 | Python | 📷 Instagram Bot - Tool for automated Instagram interactions |
+| 33 | [getmaxun/maxun](https://github.com/getmaxun/maxun) | 18,188 | TypeScript | Turn any website into a structured API. Extract, automate, search and monitor the web. |
+| 34 | [hubotio/hubot](https://github.com/hubotio/hubot) | 16,796 | JavaScript | A customizable life embetterment robot. |
+| 35 | [binux/pyspider](https://github.com/binux/pyspider) | 16,744 | Python | A Powerful Spider(Web Crawler) System in Python. |
+| 36 | [tgbot-collection/YYeTsBot](https://github.com/tgbot-collection/YYeTsBot) | 16,311 | Python | 🎬 人人影视 机器人和网站，包含人人影视全部资源以及众多网友的网盘分享 |
+| 37 | [Kr1s77/awesome-python-login-model](https://github.com/Kr1s77/awesome-python-login-model) | 16,221 | Python | 😮python模拟登陆一些大型网站，还有一些简单的爬虫，希望对你们有所帮助❤️，如果喜欢记得给个star哦🌟 |
+| 38 | [Rapptz/discord.py](https://github.com/Rapptz/discord.py) | 16,202 | Python | An API wrapper for Discord written in Python. |
+| 39 | [codelucas/newspaper](https://github.com/codelucas/newspaper) | 15,183 | Python | newspaper3k is a news, full-text, and article metadata extraction in Python 3. Advanced docs: |
+| 40 | [microsoft/playwright-python](https://github.com/microsoft/playwright-python) | 15,093 | Python | Python version of the Playwright testing and automation library. |
+| 41 | [shengqiangzhang/examples-of-web-crawlers](https://github.com/shengqiangzhang/examples-of-web-crawlers) | 14,708 | HTML | 一些非常有趣的python爬虫例子,对新手比较友好,主要爬取淘宝、天猫、微信、微信读书、豆瓣、QQ等网站。(Some interesting examples of python crawlers that are friendly to beginners. ) |
+| 42 | [Vendicated/Vencord](https://github.com/Vendicated/Vencord) | 14,475 | TypeScript | The cutest Discord modification |
+| 43 | [FujiwaraChoki/MoneyPrinter](https://github.com/FujiwaraChoki/MoneyPrinter) | 14,174 | Python | Automate Creation of YouTube Shorts using MoviePy. |
+| 44 | [automatisch/automatisch](https://github.com/automatisch/automatisch) | 14,015 | JavaScript | The open source Zapier alternative. Build workflow automation without spending time and money. |
+| 45 | [s0md3v/Photon](https://github.com/s0md3v/Photon) | 13,332 | Python | Incredibly fast crawler designed for OSINT. |
+| 46 | [seleniumbase/SeleniumBase](https://github.com/seleniumbase/SeleniumBase) | 13,236 | Python | Python APIs for web automation, testing, and bypassing bot-detection. |
+| 47 | [capistrano/capistrano](https://github.com/capistrano/capistrano) | 13,012 | Ruby | A deployment automation tool built on Ruby, Rake, and SSH. |
+| 48 | [ultrafunkamsterdam/undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver) | 12,899 | Python | Custom Selenium Chromedriver \| Zero-Config \| Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM) |
+| 49 | [clearw5/Auto.js](https://github.com/clearw5/Auto.js) | 12,854 | - | Automation&Workflow JavaScript IDE on Android(安卓平台上的JavaScript编程IDE) |
+| 50 | [octalmage/robotjs](https://github.com/octalmage/robotjs) | 12,786 | C | Node.js Desktop Automation. |
+| 51 | [g1879/DrissionPage](https://github.com/g1879/DrissionPage) | 12,565 | Python | Python based web automation tool. Powerful and elegant. |
+| 52 | [Tyrrrz/DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter) | 12,355 | C# | Saves Discord chat logs to a file |
+| 53 | [crawlab-team/crawlab](https://github.com/crawlab-team/crawlab) | 12,293 | Go | Distributed web crawler admin platform for spiders management regardless of languages and frameworks. 分布式爬虫管理平台，支持任何语言和框架 |
+| 54 | [talkgo/night](https://github.com/talkgo/night) | 12,278 | Go | Weekly Go Online Meetup via Bilibili｜Go 夜读｜通过 bilibili 在线直播的方式分享 Go 相关的技术话题，每天大家在微信/telegram/Slack 上及时沟通交流编程技术话题。 |
+| 55 | [jo-inc/camofox-browser](https://github.com/jo-inc/camofox-browser) | 12,217 | JavaScript | Stealth headless browser for AI agents — bypass Cloudflare, bot detection, and anti-scraping. Drop-in Puppeteer/Playwright replacement. |
+| 56 | [LonamiWebs/Telethon](https://github.com/LonamiWebs/Telethon) | 12,065 | Python | Pure Python 3 MTProto API Telegram client library, for bots too! |
+| 57 | [robotframework/robotframework](https://github.com/robotframework/robotframework) | 11,982 | Python | Generic automation framework for acceptance testing and RPA |
+| 58 | [pwxcoo/chinese-xinhua](https://github.com/pwxcoo/chinese-xinhua) | 11,762 | Python | :orange_book: 中华新华字典数据库。包括歇后语，成语，词语，汉字。 |
+| 59 | [code4craft/webmagic](https://github.com/code4craft/webmagic) | 11,669 | Java | A scalable web crawler framework for Java. |
+| 60 | [howdyai/botkit](https://github.com/howdyai/botkit) | 11,583 | TypeScript | Botkit is an open source developer tool for building chat bots, apps and custom integrations for major messaging platforms. |
 | 61 | [ssssssss-team/spider-flow](https://github.com/ssssssss-team/spider-flow) | 11,364 | Java | 新一代爬虫平台，以图形化方式定义爬虫流程，不写代码即可完成爬虫。 |
-| 62 | [NopeCHALLC/nopecha-extension](https://github.com/NopeCHALLC/nopecha-extension) | 11,084 | - | Automated CAPTCHA solver for your browser. Works with Selenium, Puppeteer, Playwright, and more. |
-| 63 | [injetlee/Python](https://github.com/injetlee/Python) | 10,893 | Python | Python脚本。模拟登录知乎， 爬虫，操作excel，微信公众号，远程开机 |
-| 64 | [go-vgo/robotgo](https://github.com/go-vgo/robotgo) | 10,892 | Go | RobotGo, Go Native cross-platform RPA, GUI automation, Auto test and Computer use @vcaesar |
-| 65 | [taojy123/KeymouseGo](https://github.com/taojy123/KeymouseGo) | 10,647 | Python | 类似按键精灵的鼠标键盘录制和自动化操作 模拟点击和键入 \| automate mouse clicks and keyboard input |
-| 66 | [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp) | 10,616 | Go | cqhttp的golang实现，轻量、原生跨平台. |
-| 67 | [pinchtab/pinchtab](https://github.com/pinchtab/pinchtab) | 10,538 | Go | High-performance browser automation bridge and multi-instance orchestrator with advanced stealth injection and real-time dashboard. |
-| 68 | [XIU2/UserScript](https://github.com/XIU2/UserScript) | 10,178 | JavaScript | 🐵 自用的一些乱七八糟 油猴脚本~ |
-| 69 | [guyueyingmu/avbook](https://github.com/guyueyingmu/avbook) | 10,099 | PHP | AV 电影管理系统， avmoo , javbus , javlibrary 爬虫，线上 AV 影片图书馆，AV 磁力链接数据库，Japanese Adult Video Library,Adult Video Magnet Links - Japanese Adult Video Database |
+| 62 | [NopeCHALLC/nopecha-extension](https://github.com/NopeCHALLC/nopecha-extension) | 11,100 | - | Automated CAPTCHA solver for your browser. Works with Selenium, Puppeteer, Playwright, and more. |
+| 63 | [injetlee/Python](https://github.com/injetlee/Python) | 10,905 | Python | Python脚本。模拟登录知乎， 爬虫，操作excel，微信公众号，远程开机 |
+| 64 | [go-vgo/robotgo](https://github.com/go-vgo/robotgo) | 10,902 | Go | RobotGo, Go Native cross-platform RPA, GUI automation, Auto test and Computer use @vcaesar |
+| 65 | [taojy123/KeymouseGo](https://github.com/taojy123/KeymouseGo) | 10,651 | Python | 类似按键精灵的鼠标键盘录制和自动化操作 模拟点击和键入 \| automate mouse clicks and keyboard input |
+| 66 | [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp) | 10,596 | Go | cqhttp的golang实现，轻量、原生跨平台. |
+| 67 | [pinchtab/pinchtab](https://github.com/pinchtab/pinchtab) | 10,567 | Go | High-performance browser automation bridge and multi-instance orchestrator with advanced stealth injection and real-time dashboard. |
+| 68 | [XIU2/UserScript](https://github.com/XIU2/UserScript) | 10,193 | JavaScript | 🐵 自用的一些乱七八糟 油猴脚本~ |
+| 69 | [guyueyingmu/avbook](https://github.com/guyueyingmu/avbook) | 10,103 | PHP | AV 电影管理系统， avmoo , javbus , javlibrary 爬虫，线上 AV 影片图书馆，AV 磁力链接数据库，Japanese Adult Video Library,Adult Video Magnet Links - Japanese Adult Video Database |
