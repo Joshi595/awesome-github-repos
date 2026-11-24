@@ -8,13 +8,13 @@ import { CommandPalette } from '../components/palette/CommandPalette';
 import { getSnapshot } from '../lib/data';
 import { formatDate, formatNumber } from '../lib/format';
 import { href } from '../lib/paths';
+import { SITE_NAME, WEEKLY_FEED_TITLE } from '../lib/site';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const SITE_NAME = 'awesome/repos';
 const snapshot = getSnapshot();
 const { title, description = `Explore the ${formatNumber(snapshot.repository_count)} public GitHub repositories with ${formatNumber(snapshot.minimum_stars)}+ stars: search, filter, track what is rising, compare, and save shortlists.` } =
   Astro.props;
@@ -33,7 +33,7 @@ const moreNav = [
   { label: 'My stars', href: href('/stars/') },
   { label: 'About the data', href: href('/about/') },
 ];
-const pageTitle = title ? `${title} · ${SITE_NAME}` : `${SITE_NAME}: GitHub repositories with 10k+ stars`;
+const pageTitle = title ? `${title} · ${SITE_NAME}` : `${SITE_NAME} · Top GitHub Repositories by Stars`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(href('/og.png'), Astro.site);
 const palettePages = [...primaryNav, ...moreNav];
@@ -50,7 +50,7 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" type="application/rss+xml" title="awesome/repos weekly" href={href('/weekly/feed.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={WEEKLY_FEED_TITLE} href={href('/weekly/feed.xml')} />
     <link rel="sitemap" href={href('/sitemap-index.xml')} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -73,7 +73,7 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="topbar">
       <div class="shell topbar-inner">
-        <a class="brand" href={href('/')}>awesome<span>/</span>repos</a>
+        <a class="brand" href={href('/')}>{SITE_NAME}</a>
         <nav class="nav" aria-label="Main">
           {primaryNav.map((item) => (
             <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
@@ -89,7 +89,7 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
         </nav>
         <div class="topbar-actions">
           <button type="button" class="palette-button" data-palette-open aria-label="Quick search">
-            <span>Quick search</span>
+            <span>Search</span>
             <kbd>Ctrl K</kbd>
           </button>
           <button type="button" class="icon-button" id="theme-toggle" aria-label="Switch between light and dark theme">

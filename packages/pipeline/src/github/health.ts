@@ -53,7 +53,7 @@ async function queryBatch(ids: string[], options: Required<HealthOptions>): Prom
         headers: {
           Authorization: `Bearer ${options.token}`,
           'Content-Type': 'application/json',
-          'User-Agent': 'awesome-github-repos',
+          'User-Agent': 'github-star-tracker-10k',
         },
         body: JSON.stringify({ query: QUERY, variables: { ids } }),
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

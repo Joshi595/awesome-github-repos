@@ -104,7 +104,7 @@ export class GitHubClient {
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'awesome-github-repos',
+      'User-Agent': 'github-star-tracker-10k',
     };
     if (this.token) headers.Authorization = `Bearer ${this.token}`;
 

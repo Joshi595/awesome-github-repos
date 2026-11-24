@@ -1,4 +1,4 @@
-/** Site-relative links that respect the deploy base path (e.g. /awesome-github-repos/). */
+/** Site-relative links that respect the deploy base path. */
 
 const BASE = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
 

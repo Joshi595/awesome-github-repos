@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getSnapshot } from '../../lib/data';
 import { href, weekPath } from '../../lib/paths';
+import { WEEKLY_FEED_TITLE } from '../../lib/site';
 import { weekBasis, weekSummary, weekTitle } from '../../lib/weekly';
 
 function escapeXml(value: string): string {
@@ -26,7 +27,7 @@ export const GET: APIRoute = ({ site }) => {
   const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>awesome/repos weekly</title>
+    <title>${escapeXml(WEEKLY_FEED_TITLE)}</title>
     <link>${escapeXml(absolute(href('/weekly/')))}</link>
     <description>What changed each week among GitHub repositories with 10,000+ stars.</description>
     <language>en</language>

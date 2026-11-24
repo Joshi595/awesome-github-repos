@@ -1,31 +1,30 @@
-# awesome-github-repos
+# GitHub Star Tracker 10K
 
-Every public GitHub repository with 10,000+ stars, in a fast explorer that refreshes itself daily.
+Find the most-starred GitHub repositories and see which ones are gaining stars. The tracker covers every public repository with **10,000+ stars** and refreshes daily.
+
+## [Open the live website](https://joshi595.github.io/github-star-tracker-10k/)
+
+[Rising repositories](https://joshi595.github.io/github-star-tracker-10k/rising/) · [Tool guides](https://joshi595.github.io/github-star-tracker-10k/collections/) · [Compare repositories](https://joshi595.github.io/github-star-tracker-10k/compare/) · [Weekly reports](https://joshi595.github.io/github-star-tracker-10k/weekly/)
 
 <!-- STATS:START -->
 **5,800** repositories with 10,000+ stars, as of **2026-11-23**.
 <!-- STATS:END -->
 
-**Live site: [joshi595.github.io/awesome-github-repos](https://joshi595.github.io/awesome-github-repos/)**
+[![The live explorer showing popular GitHub repositories, star counts, weekly gains, and filters](.github/assets/screenshot.png)](https://joshi595.github.io/github-star-tracker-10k/)
 
-[![Publish](https://github.com/Joshi595/awesome-github-repos/actions/workflows/publish.yml/badge.svg)](https://github.com/Joshi595/awesome-github-repos/actions/workflows/publish.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+## What you can do on the site
 
-[![The explorer: a searchable, filterable list of repositories with star counts and weekly gains](.github/assets/screenshot.png)](https://joshi595.github.io/awesome-github-repos/)
+- **Find projects** by language, topic, domain, star count, or activity. Share a link to your filtered results.
+- **Track star growth** with repository history charts, weekly and monthly rankings, and reports on projects crossing 10,000 stars. Subscribe via the [weekly RSS feed](https://joshi595.github.io/github-star-tracker-10k/weekly/feed.xml).
+- **Compare your options** by putting up to four repositories side by side. Check releases, issues, and similar projects, or use the tool guides to weigh trade-offs.
+- **Save what you find** in browser-based shortlists you can share or export as Markdown. Enter a GitHub username to see which popular repositories it has starred and discover related projects.
 
-## What you can do with it
+## Rankings on GitHub
 
-- **Search and filter** by domain, language, topic, star count, activity and age. Every view has a shareable URL.
-- **See what is rising.** The site records star counts daily, so it can show weekly and monthly gainers, new entrants to the 10k club, and rank climbers. A plain star ranking cannot.
-- **Read the weekly report.** Each week gets a page with a permanent address (and an RSS feed): top gainers, fastest growers, what joined the list and what left it.
-- **Open any repository** for its star history chart, release and issue figures, similar projects and the collections it appears in.
-- **Understand a repository in one click.** Each one links to tools that explain it, diagram its architecture, digest it for an AI assistant, or write a prompt to rebuild it.
-- **Compare** up to four repositories side by side, with their growth on one chart.
-- **Check your stars.** Enter a GitHub username to see which top repositories it has starred, which are rising, and what it might like next.
-- **Save shortlists** in your browser, export them as Markdown, and share them with a link. No account.
-- **Choose a tool** with guides for the command line, local AI, and frontend development. See where each option fits, compare the trade-offs, and save your shortlist.
+The table below and the [lists by domain](lists/) are refreshed weekly.
 
-## Top 100
+<details>
+<summary>Show the top 100 repositories by stars</summary>
 
 <!-- TOP:START -->
 | # | Repository | Stars | Language | Description |
@@ -132,45 +131,32 @@ Every public GitHub repository with 10,000+ stars, in a fast explorer that refre
 | 100 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | 122,380 | Go | why use many token when few token do trick. Skill + local proxy for coding agents: shorter answers, smaller tool output, every original recoverable. |
 <!-- TOP:END -->
 
-More Markdown lists, one per domain, are in [lists/](lists/). The site has the complete, searchable list.
-
-## How it works
-
-```
-content/            editorial input: domain taxonomy and collections
-packages/schema/    the data contract (zod schemas and types) shared by everything
-packages/pipeline/  fetch from GitHub -> classify -> history and momentum -> snapshot
-apps/web/           Astro site built from the snapshot
-fixtures/           a small sample so everything builds without a GitHub token
-.github/workflows/  daily publish, weekly README refresh, CI
-```
-
-1. `publish.yml` runs daily. It fetches every qualifying repository from GitHub's search API, splitting the star range so each query stays under GitHub's 1,000-result cap.
-2. The pipeline classifies each repository into domains, appends the day's star counts to the history, and derives momentum and similar repositories.
-3. The site is built from that snapshot and deployed to GitHub Pages.
-
-`main` holds code and editorial content only. Star history (one small file per day) and finished weekly reports live on the `data` branch. The full snapshot is never committed: the deployed site serves it at `/data/snapshot.json`.
-
-If a fetch comes back with far fewer repositories than the day before, the pipeline refuses to publish and the site keeps its last good data.
+</details>
 
 ## Run it locally
 
-You need Node.js 22 or newer. See [CONTRIBUTING.md](CONTRIBUTING.md) for a self-contained setup that installs Node into a project-local `venv_github` folder.
+Install Node.js 22 or newer and run these commands from the repository root. The sample data works without a GitHub token.
 
 ```sh
 npm install
-npm run data:sample   # build a snapshot from the bundled sample (no token needed)
-npm run dev           # http://localhost:4321
-```
-
-For real data:
-
-```sh
-npm run data:fetch    # about 4 minutes with GITHUB_TOKEN set, about 12 without
+npm run data:sample
 npm run dev
 ```
 
-Other commands: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`, and `npm run e2e` for the browser tests (see [CONTRIBUTING.md](CONTRIBUTING.md)).
+Open [localhost:4321](http://localhost:4321). For current data, run `npm run data:fetch` in place of `npm run data:sample`. See [Contributing](CONTRIBUTING.md) for setup options, tests, and how to edit the guides.
+
+## How the data is built
+
+The [Publish workflow](https://github.com/Joshi595/github-star-tracker-10k/actions/workflows/publish.yml) fetches qualifying repositories daily, using star ranges to stay below GitHub's search result limit. The pipeline categorizes projects, records daily counts on the `data` branch, and builds a snapshot for the Astro site. If a fetch returns substantially fewer results than the previous day, the site keeps its last good snapshot.
+
+Download the [current JSON snapshot](https://joshi595.github.io/github-star-tracker-10k/data/snapshot.json) or see the [data methodology](https://joshi595.github.io/github-star-tracker-10k/about/).
+
+| Directory | Contents |
+| --- | --- |
+| [`apps/web`](apps/web/) | Astro website and interactive explorer |
+| [`packages/pipeline`](packages/pipeline/) | GitHub data collection, rankings, and exports |
+| [`packages/schema`](packages/schema/) | Shared data schemas |
+| [`content`](content/) | Domains, collections, and tool guides |
 
 ## Deploying your own copy
 
@@ -178,8 +164,8 @@ Other commands: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`
 2. In **Settings > Pages**, set the source to **GitHub Actions**.
 3. Run the **Publish** workflow once (Actions tab), or push to `main`.
 
-No secrets are required; the workflow uses the token GitHub Actions provides.
+The workflow uses the token GitHub Actions provides.
 
 ## License
 
-[MIT](LICENSE). Repository data comes from GitHub's public API and belongs to its respective owners.
+[MIT](LICENSE). Repository data comes from the public GitHub API.

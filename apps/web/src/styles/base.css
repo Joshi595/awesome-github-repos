@@ -189,10 +189,6 @@ main.shell {
   text-decoration: none;
 }
 
-.brand span {
-  color: var(--accent);
-}
-
 .nav {
   display: flex;
   gap: 2px;
@@ -703,7 +699,11 @@ input::placeholder {
 }
 
 @media (max-width: 760px) {
-  .palette-button span {
+  .palette-button {
+    padding-inline: 8px;
+  }
+
+  .palette-button kbd {
     display: none;
   }
 
@@ -731,6 +731,14 @@ input::placeholder {
 }
 
 @media (max-width: 360px) {
+  .topbar-inner {
+    column-gap: 8px;
+  }
+
+  .brand {
+    font-size: 13px;
+  }
+
   .nav {
     gap: 0;
   }
