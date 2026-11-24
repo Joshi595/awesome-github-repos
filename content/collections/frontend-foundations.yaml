@@ -1,12 +1,30 @@
 id: frontend-foundations
 title: Modern Frontend Foundations
 audience: Builders
-description: The major frameworks and tools behind contemporary web interfaces.
-last_reviewed: '2026-09-17'
+description: Choose a UI foundation for your next web project.
+last_reviewed: '2026-11-24'
 repositories:
   - name: react/react
     note: A foundational UI library with a vast ecosystem.
   - name: vuejs/core
     note: The current Vue framework implementation.
+  - name: sveltejs/svelte
+    note: A compiler-based framework with single-file components.
   - name: vercel/next.js
     note: Production-ready React applications and rendering.
+decisions:
+  - id: ui-foundation
+    title: Choose a component framework
+    choices:
+      - name: react/react
+        best_fit: Building with JSX and using an existing React team, component library, or ecosystem.
+        trade_off: For application routing and data loading, pick a framework or add those pieces yourself.
+        docs_url: https://react.dev/learn
+      - name: vuejs/core
+        best_fit: Writing components with HTML-style templates and adopting them incrementally.
+        trade_off: A larger single-page app still needs routing and choices about shared state.
+        docs_url: https://vuejs.org/guide/introduction.html
+      - name: sveltejs/svelte
+        best_fit: Building with a compiler and co-locating markup, logic, and styles in .svelte files.
+        trade_off: For a full application, add SvelteKit or choose your own routing and build setup.
+        docs_url: https://svelte.dev/docs/svelte/overview

@@ -2,10 +2,15 @@ id: command-line-essentials
 title: Modern Command-Line Essentials
 audience: Builders
 description: Faster, friendlier replacements for the tools you use in a terminal every day.
-last_reviewed: '2026-10-02'
+last_reviewed: '2026-11-24'
 repositories:
   - name: BurntSushi/ripgrep
     note: Recursive search that respects .gitignore and is fast on large trees.
+  - name: ggreer/the_silver_searcher
+    note: A code searcher used as ag in shell and editor workflows.
+  - name: Genivia/ugrep
+    note: Search inside archives and compressed files.
+    reviewed_stars: 3338
   - name: sharkdp/fd
     note: A simpler, quicker alternative to find.
   - name: junegunn/fzf
@@ -20,3 +25,57 @@ repositories:
     note: A terminal UI for staging, rebasing, and browsing Git history.
   - name: dandavison/delta
     note: Readable, syntax-highlighted diffs for Git.
+  - name: httpie/cli
+    note: Readable HTTP requests with JSON, sessions, and plugins.
+  - name: ducaale/xh
+    note: An HTTPie-style command-line HTTP client distributed as a standalone binary.
+    reviewed_stars: 8219
+decisions:
+  - id: text-search
+    title: Search inside files
+    choices:
+      - name: BurntSushi/ripgrep
+        best_fit: Searching source trees by regular expression while respecting .gitignore.
+        trade_off: By default it skips hidden and ignored files, so include them explicitly when you need to search everything.
+        docs_url: https://github.com/BurntSushi/ripgrep#readme
+      - name: ggreer/the_silver_searcher
+        best_fit: Working with existing scripts or editor integrations built around the ag command.
+        trade_off: Its .ignore and .agignore rules can give different results from an existing ripgrep setup.
+        docs_url: https://github.com/ggreer/the_silver_searcher#readme
+      - name: Genivia/ugrep
+        best_fit: Searching inside ZIP files, archives, or compressed logs without extracting them first.
+        trade_off: Archive search uses its own flags, and some formats depend on how the binary was built.
+        docs_url: https://github.com/Genivia/ugrep#readme
+  - id: file-finding
+    title: Find files by name
+    choices:
+      - name: sharkdp/fd
+        best_fit: Listing paths that match a name, extension, or file type in a script.
+        trade_off: It skips hidden and ignored paths by default.
+        docs_url: https://github.com/sharkdp/fd#readme
+      - name: junegunn/fzf
+        best_fit: Picking a path interactively from a long list of candidates.
+        trade_off: For precise file-type or extension filters, feed it candidates from a tool such as fd.
+        docs_url: https://github.com/junegunn/fzf#readme
+  - id: directories
+    title: Navigate and inspect directories
+    choices:
+      - name: ajeetdsouza/zoxide
+        best_fit: Jumping back to directories you visit regularly.
+        trade_off: It needs shell integration and learns from directory visits over time.
+        docs_url: https://github.com/ajeetdsouza/zoxide#readme
+      - name: eza-community/eza
+        best_fit: Inspecting an unfamiliar directory with a tree view or Git status.
+        trade_off: Its job is listing files, so use your shell or zoxide to change directories.
+        docs_url: https://github.com/eza-community/eza#readme
+  - id: http-requests
+    title: Send HTTP requests
+    choices:
+      - name: httpie/cli
+        best_fit: Working with JSON APIs and using HTTPie plugins or saved sessions.
+        trade_off: Plugin support comes with a Python-based installation and environment.
+        docs_url: https://github.com/httpie/cli#readme
+      - name: ducaale/xh
+        best_fit: Using HTTPie-style request syntax in a standalone executable.
+        trade_off: Check the compatibility notes before migrating scripts that rely on HTTPie-specific behavior.
+        docs_url: https://github.com/ducaale/xh#readme

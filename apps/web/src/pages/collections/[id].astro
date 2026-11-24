@@ -2,10 +2,11 @@
 import type { GetStaticPaths } from 'astro';
 import type { ResolvedCollection } from '@agr/schema';
 import RepoList from '../../components/repo/RepoList.astro';
+import { SaveButton } from '../../components/shortlist/SaveButton';
 import Base from '../../layouts/Base.astro';
 import { getSnapshot, repoById } from '../../lib/data';
-import { formatDate } from '../../lib/format';
-import { explorePath, href } from '../../lib/paths';
+import { formatDate, formatNumber } from '../../lib/format';
+import { comparePath, explorePath, href, repoPath } from '../../lib/paths';
 
 export const getStaticPaths = (() =>
   getSnapshot().collections.map((collection) => ({
@@ -18,7 +19,16 @@ interface Props {
 }
 
 const { collection } = Astro.props;
+const decisions = (collection.decisions ?? []).map((decision) => ({
+  ...decision,
+  choices: decision.choices.map((choice) => ({
+    ...choice,
+    repo: choice.id === null ? undefined : repoById(choice.id),
+  })),
+}));
+const grouped = new Set(decisions.flatMap((decision) => decision.choices.map((choice) => choice.id)));
 const items = collection.entries.flatMap((entry) => {
+  if (grouped.has(entry.id)) return [];
   const repo = repoById(entry.id);
   return repo ? [{ repo, note: entry.note }] : [];
 });
@@ -26,7 +36,7 @@ const items = collection.entries.flatMap((entry) => {
 
 <Base title={collection.title} description={collection.description}>
   <header class="page-head">
-    <p class="eyebrow"><a href={href('/collections/')}>Collections</a> · For {collection.audience.toLowerCase()}</p>
+    <p class="eyebrow"><a href={href('/collections/')}>Guides</a> · For {collection.audience.toLowerCase()}</p>
     <h1>{collection.title}</h1>
     <p class="lede">{collection.description}</p>
     <p class="hint">
@@ -35,5 +45,71 @@ const items = collection.entries.flatMap((entry) => {
     </p>
   </header>
 
-  <RepoList items={items} numbered />
+  {decisions.length > 1 && (
+    <nav class="jump guide-jump" aria-label="Decisions in this guide">
+      {decisions.map((decision) => <a href={`#${decision.id}`}>{decision.title}</a>)}
+    </nav>
+  )}
+  {decisions.map((decision) => {
+    const names = decision.choices.flatMap(({ repo }) => repo?.name ?? []);
+    const hasCurated = decision.choices.some(({ repo, reviewed_stars }) => !repo && reviewed_stars !== undefined);
+    const compareLabel = hasCurated ? 'Compare ranked choices' : 'Compare choices';
+    return (
+      <section class="guide-decision section" id={decision.id} aria-labelledby={`${decision.id}-title`}>
+        <div class="guide-decision-head">
+          <h2 id={`${decision.id}-title`}>{decision.title}</h2>
+          {names.length >= 2 && (
+            <a
+              class="button"
+              href={comparePath(names, { guide: collection.id, decision: decision.id })}
+              aria-label={`${compareLabel} for ${decision.title.toLowerCase()}`}
+            >{compareLabel}</a>
+          )}
+        </div>
+        <ul class="guide-choices">
+          {decision.choices.map((choice) => (
+            <li class="panel guide-choice">
+              <div class="guide-choice-head">
+                <h3>
+                  {choice.repo ? (
+                    <a href={repoPath(choice.repo.name)}>{choice.name}</a>
+                  ) : (
+                    <a href={`https://github.com/${choice.name}`} aria-label={`${choice.name} on GitHub`}>{choice.name}</a>
+                  )}
+                </h3>
+                {choice.repo && <SaveButton client:load repoId={choice.repo.id} name={choice.repo.name} />}
+              </div>
+              {
+                choice.repo ? (
+                  <p class="hint">{formatNumber(choice.repo.stars)} stars</p>
+                ) : choice.reviewed_stars !== undefined ? (
+                  <p class="hint"><strong>Curated pick</strong> · {formatNumber(choice.reviewed_stars)} stars as of {formatDate(collection.last_reviewed)}</p>
+                ) : (
+                  <p class="hint">Catalog data unavailable</p>
+                )
+              }
+              <dl class="guide-notes">
+                <dt>Best fit</dt>
+                <dd>{choice.best_fit}</dd>
+                <dt>Trade-off</dt>
+                <dd>{choice.trade_off}</dd>
+              </dl>
+              <div class="guide-choice-links">
+                <a href={choice.docs_url} aria-label={`Documentation for ${choice.name}`}>Documentation</a>
+                {choice.repo && <a href={choice.repo.url} aria-label={`${choice.name} on GitHub`}>GitHub</a>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+  {items.length > 0 && (
+    decisions.length > 0 ? (
+      <section class="section" aria-labelledby="more-tools">
+        <h2 id="more-tools">More tools in this guide</h2>
+        <RepoList items={items} numbered />
+      </section>
+    ) : <RepoList items={items} numbered />
+  )}
 </Base>

@@ -197,11 +197,13 @@ main.shell {
   display: flex;
   gap: 2px;
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
-.nav a {
+.nav a,
+.nav summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   padding: 6px 10px;
   border-radius: var(--radius-s);
   color: var(--text-2);
@@ -209,15 +211,62 @@ main.shell {
   white-space: nowrap;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav summary:hover {
   background: var(--surface-hover);
   color: var(--text);
   text-decoration: none;
 }
 
-.nav a[aria-current='page'] {
+.nav a[aria-current='page'],
+.nav summary.is-current,
+.nav details[open] > summary {
   background: var(--surface-2);
   color: var(--text);
+}
+
+.nav-more {
+  position: relative;
+}
+
+.nav-more summary {
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.nav-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-more summary::after {
+  width: 6px;
+  height: 6px;
+  border-bottom: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  content: '';
+}
+
+.nav-more ul {
+  position: absolute;
+  inset: calc(100% + 4px) 0 auto auto;
+  min-width: 164px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-m);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.freshness-notice {
+  margin-bottom: 16px;
+}
+
+.freshness-notice[hidden] {
+  display: none;
 }
 
 .topbar-actions {
@@ -658,7 +707,7 @@ input::placeholder {
     display: none;
   }
 
-  /* Brand and actions on one line, the full nav on its own scrollable line below. */
+  /* Keep the primary navigation on its own line below the brand and actions. */
   .topbar-inner {
     flex-wrap: wrap;
     gap: 0 12px;
@@ -672,7 +721,23 @@ input::placeholder {
     order: 3;
     flex-basis: 100%;
     margin-inline: -6px;
-    padding-bottom: 8px;
+    padding-bottom: 4px;
+  }
+
+  .nav a,
+  .nav summary {
+    padding-inline: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav {
+    gap: 0;
+  }
+
+  .nav > a,
+  .nav-more summary {
+    padding-inline: 5px;
   }
 }
 

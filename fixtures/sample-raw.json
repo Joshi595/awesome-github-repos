@@ -1,7 +1,7 @@
 {
  "generated_at": "2026-10-02T16:51:40.383Z",
  "minimum_stars": 10000,
- "repository_count": 343,
+ "repository_count": 346,
  "repositories": [
   {
    "id": 132750724,
@@ -4865,6 +4865,39 @@
    }
   },
   {
+   "id": 74293321,
+   "node_id": "MDEwOlJlcG9zaXRvcnk3NDI5MzMyMQ==",
+   "full_name": "sveltejs/svelte",
+   "html_url": "https://github.com/sveltejs/svelte",
+   "description": "web development for the rest of us",
+   "stargazers_count": 88227,
+   "forks_count": 6913,
+   "language": "JavaScript",
+   "topics": [
+    "compiler",
+    "template",
+    "ui"
+   ],
+   "owner": {
+    "login": "sveltejs",
+    "avatar_url": "https://avatars.githubusercontent.com/u/23617963?v=4"
+   },
+   "homepage": "https://svelte.dev",
+   "license": {
+    "name": "MIT License"
+   },
+   "created_at": "2016-11-20T18:13:05Z",
+   "pushed_at": "2026-09-30T16:20:58Z",
+   "archived": false,
+   "open_issues_count": 1106,
+   "health": {
+    "latest_release_at": "2026-09-18T23:51:13Z",
+    "latest_release_tag": "svelte@5.57.1",
+    "open_issues": 937,
+    "open_pull_requests": 169
+   }
+  },
+  {
    "id": 872119017,
    "node_id": "R_kgDOM_t66Q",
    "full_name": "D4Vinci/Scrapling",
@@ -6659,6 +6692,56 @@
    }
   },
   {
+   "id": 3544424,
+   "node_id": "MDEwOlJlcG9zaXRvcnkzNTQ0NDI0",
+   "full_name": "httpie/cli",
+   "html_url": "https://github.com/httpie/cli",
+   "description": "🥧 HTTPie CLI  — modern, user-friendly command-line HTTP client for the API era. JSON support, colors, sessions, downloads, plugins & more.",
+   "stargazers_count": 38607,
+   "forks_count": 4014,
+   "language": "Python",
+   "topics": [
+    "api",
+    "api-client",
+    "api-testing",
+    "cli",
+    "client",
+    "curl",
+    "debugging",
+    "developer-tools",
+    "development",
+    "devops",
+    "http",
+    "http-client",
+    "httpie",
+    "json",
+    "python",
+    "rest",
+    "rest-api",
+    "terminal",
+    "usability",
+    "web"
+   ],
+   "owner": {
+    "login": "httpie",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24454777?v=4"
+   },
+   "homepage": "https://httpie.io",
+   "license": {
+    "name": "BSD 3-Clause \"New\" or \"Revised\" License"
+   },
+   "created_at": "2012-02-25T12:39:13Z",
+   "pushed_at": "2024-12-17T17:30:35Z",
+   "archived": false,
+   "open_issues_count": 346,
+   "health": {
+    "latest_release_at": "2024-11-01T17:33:07Z",
+    "latest_release_tag": "3.2.4",
+    "open_issues": 190,
+    "open_pull_requests": 156
+   }
+  },
+  {
    "id": 15045751,
    "node_id": "MDEwOlJlcG9zaXRvcnkxNTA0NTc1MQ==",
    "full_name": "docker/compose",
@@ -7811,6 +7894,42 @@
     "latest_release_tag": "quasar-v2.34.0",
     "open_issues": 57,
     "open_pull_requests": 1
+   }
+  },
+  {
+   "id": 2810455,
+   "node_id": "MDEwOlJlcG9zaXRvcnkyODEwNDU1",
+   "full_name": "ggreer/the_silver_searcher",
+   "html_url": "https://github.com/ggreer/the_silver_searcher",
+   "description": "A code-searching tool similar to ack, but faster.",
+   "stargazers_count": 27120,
+   "forks_count": 1436,
+   "language": "C",
+   "topics": [
+    "ag",
+    "c",
+    "command-line-tool",
+    "pcre",
+    "search-in-text",
+    "silver-searcher"
+   ],
+   "owner": {
+    "login": "ggreer",
+    "avatar_url": "https://avatars.githubusercontent.com/u/200121?v=4"
+   },
+   "homepage": "http://geoff.greer.fm/ag/",
+   "license": {
+    "name": "Apache License 2.0"
+   },
+   "created_at": "2011-11-19T19:50:47Z",
+   "pushed_at": "2024-06-16T19:37:41Z",
+   "archived": false,
+   "open_issues_count": 564,
+   "health": {
+    "latest_release_at": null,
+    "latest_release_tag": null,
+    "open_issues": 446,
+    "open_pull_requests": 118
    }
   },
   {

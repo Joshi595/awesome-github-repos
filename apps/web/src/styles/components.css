@@ -937,11 +937,115 @@
   gap: 6px;
 }
 
-/* Compare */
+/* Guides and comparisons */
+
+.featured-guides {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 20px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+
+.featured-guides h2 {
+  font-size: 14px;
+}
+
+.featured-guide-links,
+.guide-choice-links,
+.compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.guide-jump {
+  margin-bottom: 24px;
+}
+
+.guide-decision {
+  scroll-margin-top: 54px;
+}
+
+.guide-decision-head,
+.guide-choice-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+}
+
+.guide-decision-head {
+  margin-bottom: 12px;
+}
+
+.guide-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+  gap: 12px;
+}
+
+.guide-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.guide-choice h3 {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.guide-choice .hint,
+.guide-notes dt {
+  color: var(--text-2);
+}
+
+.guide-notes {
+  margin: 4px 0 auto;
+}
+
+.guide-notes dt {
+  font-weight: 600;
+}
+
+.guide-notes dd + dt {
+  margin-top: 8px;
+}
+
+.guide-choice-links {
+  margin-top: 6px;
+}
 
 .compare {
   display: grid;
   gap: 16px;
+}
+
+.compare-context h2 {
+  margin-top: 4px;
+}
+
+.comparison-link {
+  flex: 1 1 18rem;
+  width: min(100%, 38rem);
+  min-width: 0;
+  min-height: 36px;
+  padding-inline: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
 }
 
 .compare-add {
@@ -1019,6 +1123,11 @@
 .compare-table td.is-best {
   background: var(--accent-bg);
   font-weight: 600;
+}
+
+.compare-table .compare-editorial td {
+  font-family: var(--font-sans);
+  font-size: 14px;
 }
 
 .compare-head {

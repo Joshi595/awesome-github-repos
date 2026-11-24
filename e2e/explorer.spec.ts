@@ -79,7 +79,7 @@ test('filters combine, survive re-rendering, and follow back and forward', async
 
 test('a deep link restores the view, and a collection still allows searching', async ({ page }) => {
   await openExplorer(page, '?collection=frontend-foundations&sort=forks');
-  await expect(rows(page)).toHaveCount(3);
+  await expect(rows(page)).toHaveCount(4);
   await expect(page.locator('.sort select')).toHaveValue('forks');
 
   await search(page).fill('vue');

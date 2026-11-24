@@ -2,7 +2,7 @@ id: run-ai-locally
 title: Run AI on Your Own Machine
 audience: Builders
 description: The pieces for running language and image models locally instead of through a hosted API.
-last_reviewed: '2026-10-02'
+last_reviewed: '2026-11-24'
 repositories:
   - name: ggml-org/llama.cpp
     note: The inference engine many local tools are built on; runs models on CPUs and consumer GPUs.
@@ -16,3 +16,19 @@ repositories:
     note: A self-hosted, OpenAI-compatible API in front of local models.
   - name: vllm-project/vllm
     note: High-throughput model serving, for when one machine has to serve many requests.
+decisions:
+  - id: local-language-models
+    title: Choose a runtime for local language models
+    choices:
+      - name: ollama/ollama
+        best_fit: Downloading a model and testing it quickly from a CLI or local API.
+        trade_off: Check model and hardware support before you commit to a deployment.
+        docs_url: https://github.com/ollama/ollama#readme
+      - name: ggml-org/llama.cpp
+        best_fit: Running GGUF models with control over quantization and CPU or GPU settings.
+        trade_off: You'll choose the model file and runtime settings yourself.
+        docs_url: https://github.com/ggml-org/llama.cpp#readme
+      - name: mudler/LocalAI
+        best_fit: Pointing an OpenAI-compatible client at a self-hosted server with multiple model backends.
+        trade_off: Backend and model configuration adds setup work for a simple local chat experiment.
+        docs_url: https://github.com/mudler/LocalAI#readme

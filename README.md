@@ -23,7 +23,7 @@ Every public GitHub repository with 10,000+ stars, in a fast explorer that refre
 - **Compare** up to four repositories side by side, with their growth on one chart.
 - **Check your stars.** Enter a GitHub username to see which top repositories it has starred, which are rising, and what it might like next.
 - **Save shortlists** in your browser, export them as Markdown, and share them with a link. No account.
-- **Follow a collection:** short hand-picked sets for a goal, each entry with a note on why it is there.
+- **Choose a tool** with guides for the command line, local AI, and frontend development. See where each option fits, compare the trade-offs, and save your shortlist.
 
 ## Top 100
 

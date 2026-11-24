@@ -1,4 +1,4 @@
-import type { RepoDetail } from '@agr/schema';
+import type { RepoDetail, ResolvedGuideDecision } from '@agr/schema';
 import type { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { loadDetail, loadExplorerData, type ExplorerData } from '../../lib/client-data';
@@ -12,9 +12,10 @@ import {
   formatNumber,
   formatSigned,
 } from '../../lib/format';
-import { comparePath, explorePath, href, repoPath } from '../../lib/paths';
+import { collectionPath, comparePath, explorePath, href, repoPath } from '../../lib/paths';
 import { MAX_COMPARE, useCompare } from '../../lib/storage';
 import { alignToDates, gainSinceCommonStart } from '../../lib/chart';
+import { SaveButton } from '../shortlist/SaveButton';
 import { CloseIcon } from '../ui/icons';
 import { TrendChart } from '../ui/TrendChart';
 
@@ -22,47 +23,69 @@ const SUGGESTION_LIMIT = 6;
 
 interface Metric {
   label: string;
-  /** The number to compare on; the highest (or lowest) gets highlighted. */
+  /** A momentum figure whose largest value is highlighted. */
   value?: (repo: ExplorerRepo) => number | null;
-  lowerIsBetter?: boolean;
-  render: (repo: ExplorerRepo, detail: RepoDetail | undefined) => ComponentChildren;
+  render: (repo: ExplorerRepo, detail: RepoDetail | null | undefined) => ComponentChildren;
+}
+
+interface Guide extends ResolvedGuideDecision {
+  guide: string;
+  guideTitle: string;
+}
+
+function detailStatus(detail: null | undefined) {
+  return <span class="is-muted">{detail === null ? 'Unavailable' : 'Loading…'}</span>;
 }
 
 function signed(value: number | null) {
-  if (value === null) return <span class="is-muted">n/a</span>;
+  if (value === null) return <span class="is-muted">No history</span>;
   return <span class={value < 0 ? 'is-down' : 'is-up'}>{formatSigned(value)}</span>;
 }
 
-export function CompareApp() {
+export function CompareApp({ guides }: { guides: Guide[] }) {
   const [data, setData] = useState<ExplorerData | null>(null);
   const [failed, setFailed] = useState(false);
   const [stored, setStored] = useCompare();
   const [ids, setIds] = useState<number[] | null>(null);
-  const [details, setDetails] = useState<Record<number, RepoDetail>>({});
+  const [details, setDetails] = useState<Partial<Record<number, RepoDetail | null>>>({});
   const [query, setQuery] = useState('');
+  const [guide, setGuide] = useState<Guide>();
+  const [missing, setMissing] = useState(0);
+  const [copyStatus, setCopyStatus] = useState<'copied' | 'manual'>();
 
   useEffect(() => {
     loadExplorerData().then(setData, () => setFailed(true));
   }, []);
 
-  // Names in the URL win, so a shared link shows what its sender saw; otherwise use the saved selection.
   useEffect(() => {
     if (!data || ids !== null) return;
-    const names = (new URLSearchParams(window.location.search).get('r') ?? '')
-      .split(',')
-      .filter(Boolean);
-    const fromUrl = names.flatMap((name) => data.byName.get(name.toLowerCase())?.id ?? []);
-    setIds((fromUrl.length > 0 ? [...new Set(fromUrl)] : stored).slice(0, MAX_COMPARE));
-  }, [data, stored, ids]);
+    const params = new URLSearchParams(window.location.search);
+    const names = [
+      ...new Set((params.get('r') ?? '').toLowerCase().split(',').filter(Boolean)),
+    ].slice(0, MAX_COMPARE);
+    const fromUrl = names.flatMap((name) => data.byName.get(name)?.id ?? []);
+    setGuide(
+      guides.find(
+        (entry) => entry.guide === params.get('guide') && entry.id === params.get('decision'),
+      ),
+    );
+    setMissing(names.length - fromUrl.length);
+    setIds(params.has('r') ? fromUrl : stored.slice(0, MAX_COMPARE));
+  }, [data, stored, ids, guides]);
 
   const repos = (ids ?? []).flatMap((id) => data?.byId.get(id) ?? []);
+  const context = guide ? { guide: guide.guide, decision: guide.id } : undefined;
+  const sharePath = comparePath(
+    repos.map((repo) => repo.name),
+    context,
+  );
 
   useEffect(() => {
     for (const id of ids ?? []) {
-      if (details[id]) continue;
+      if (details[id] !== undefined) continue;
       loadDetail(id).then(
-        (detail) => detail && setDetails((current) => ({ ...current, [id]: detail })),
-        () => {},
+        (detail) => setDetails((current) => ({ ...current, [id]: detail })),
+        () => setDetails((current) => ({ ...current, [id]: null })),
       );
     }
   }, [ids]);
@@ -70,8 +93,20 @@ export function CompareApp() {
   const change = (next: number[]) => {
     setIds(next);
     setStored(next);
+    setCopyStatus(undefined);
+    setMissing(0);
+    if (next.length === 0) setGuide(undefined);
     const names = next.flatMap((id) => data?.byId.get(id)?.name ?? []);
-    window.history.replaceState(null, '', comparePath(names));
+    window.history.replaceState(null, '', comparePath(names, context));
+  };
+
+  const copyComparison = async () => {
+    try {
+      await navigator.clipboard.writeText(new URL(sharePath, window.location.origin).href);
+      setCopyStatus('copied');
+    } catch {
+      setCopyStatus('manual');
+    }
   };
 
   if (failed) {
@@ -96,49 +131,66 @@ export function CompareApp() {
         )
       : [];
 
+  const choices = new Map(guide?.choices.map((choice) => [choice.id, choice]));
+  const editorialMetrics: Metric[] = repos.some((repo) => choices.has(repo.id))
+    ? [
+        { label: 'Best fit', render: (repo) => choices.get(repo.id)?.best_fit ?? '—' },
+        { label: 'Trade-off', render: (repo) => choices.get(repo.id)?.trade_off ?? '—' },
+      ]
+    : [];
   const metrics: Metric[] = [
+    ...editorialMetrics,
     {
       label: 'Rank',
-      value: (repo) => repo.rank,
-      lowerIsBetter: true,
       render: (repo) => `#${formatNumber(repo.rank)}`,
     },
-    { label: 'Stars', value: (repo) => repo.stars, render: (repo) => formatNumber(repo.stars) },
-    { label: 'Forks', value: (repo) => repo.forks, render: (repo) => formatNumber(repo.forks) },
+    { label: 'Stars', render: (repo) => formatNumber(repo.stars) },
+    { label: 'Forks', render: (repo) => formatNumber(repo.forks) },
     { label: 'Gain per 7 days', value: (repo) => repo.d7, render: (repo) => signed(repo.d7) },
     { label: 'Gain per 30 days', value: (repo) => repo.d30, render: (repo) => signed(repo.d30) },
     { label: 'Age', render: (repo) => formatDuration(repo.createdAt, data.now) },
     {
       label: 'Latest release',
       render: (_repo, detail) => {
-        if (!detail) return '…';
-        if (!detail.health.releases_checked) return <span class="is-muted">not checked</span>;
-        if (!detail.health.latest_release_at) return <span class="is-muted">none published</span>;
+        if (!detail) return detailStatus(detail);
+        if (!detail.health.releases_checked) return <span class="is-muted">Not checked</span>;
+        if (!detail.health.latest_release_at) return <span class="is-muted">None published</span>;
         return `${detail.health.latest_release_tag ?? ''} ${formatAge(Date.parse(detail.health.latest_release_at), data.now)}`.trim();
       },
     },
     {
       label: 'Open issues and PRs',
       render: (_repo, detail) => {
-        if (!detail) return '…';
+        if (!detail) return detailStatus(detail);
         const { open_issues: issues, open_pull_requests: pulls, open_total: total } = detail.health;
         if (issues !== null && pulls !== null) {
           return `${formatNumber(issues)} issues, ${formatNumber(pulls)} PRs`;
         }
-        return total === null ? <span class="is-muted">unknown</span> : formatNumber(total);
+        return total === null ? (
+          <span class="is-muted">Unavailable</span>
+        ) : (
+          `${formatNumber(total)} combined`
+        );
       },
     },
     {
       label: 'Last push',
-      value: (repo) => repo.pushedAt,
       render: (repo) => formatAge(repo.pushedAt, data.now),
     },
-    { label: 'Activity', render: (repo) => activityLabel(repo.activity) },
+    {
+      label: 'Activity',
+      render: (repo) => (repo.archived ? 'Archived' : activityLabel(repo.activity)),
+    },
     { label: 'Language', render: (repo) => repo.language ?? <span class="is-muted">none</span> },
     {
       label: 'License',
       render: (repo, detail) =>
-        detail?.license ?? (repo.hasLicense ? '…' : <span class="is-muted">none</span>),
+        detail?.license ??
+        (repo.hasLicense ? (
+          detailStatus(detail === undefined ? undefined : null)
+        ) : (
+          <span class="is-muted">None detected</span>
+        )),
     },
     {
       label: 'Domains',
@@ -182,7 +234,7 @@ export function CompareApp() {
     if (!metric.value || repos.length < 2) return null;
     const scored = repos.flatMap((repo) => {
       const value = metric.value?.(repo) ?? null;
-      return value === null ? [] : [{ id: repo.id, value: metric.lowerIsBetter ? -value : value }];
+      return value === null ? [] : [{ id: repo.id, value }];
     });
     const best = Math.max(...scored.map((entry) => entry.value));
     const leaders = scored.filter((entry) => entry.value === best);
@@ -191,6 +243,17 @@ export function CompareApp() {
 
   return (
     <div class="compare">
+      {guide && (
+        <section class="panel compare-context">
+          <a href={`${collectionPath(guide.guide)}#${guide.id}`}>{guide.guideTitle}</a>
+          <h2>{guide.title}</h2>
+        </section>
+      )}
+      {missing > 0 && (
+        <p class="notice" role="status">
+          Some repositories in this link are no longer in the catalog.
+        </p>
+      )}
       {ids.length < MAX_COMPARE && (
         <div class="compare-add">
           <label class="search">
@@ -243,7 +306,25 @@ export function CompareApp() {
               <TrendChart dates={trend.dates} series={trend.series} measure="Stars gained" signed />
             </section>
           )}
-          <div class="table-scroll">
+          <div class="compare-actions">
+            <button type="button" class="button" onClick={copyComparison}>
+              Copy comparison link
+            </button>
+            <span class="hint" role="status">
+              {copyStatus === 'copied' && 'Link copied.'}
+              {copyStatus === 'manual' && 'Select and copy the link.'}
+            </span>
+            {copyStatus === 'manual' && (
+              <input
+                class="comparison-link"
+                aria-label="Comparison link"
+                readOnly
+                value={new URL(sharePath, window.location.origin).href}
+                onFocus={(event) => event.currentTarget.select()}
+              />
+            )}
+          </div>
+          <div class="table-scroll" tabIndex={0} role="region" aria-label="Comparison table">
             <table class="compare-table">
               <thead>
                 <tr>
@@ -260,10 +341,11 @@ export function CompareApp() {
                           height="28"
                         />
                         <a href={repoPath(repo.name)}>{repo.name}</a>
+                        <SaveButton repoId={repo.id} name={repo.name} />
                         <button
                           type="button"
                           class="icon-button"
-                          aria-label={`Remove ${repo.name}`}
+                          aria-label={`Remove ${repo.name} from comparison`}
                           onClick={() => change(ids.filter((id) => id !== repo.id))}
                         >
                           <CloseIcon />
@@ -278,7 +360,10 @@ export function CompareApp() {
                 {metrics.map((metric) => {
                   const best = leader(metric);
                   return (
-                    <tr key={metric.label}>
+                    <tr
+                      key={metric.label}
+                      class={editorialMetrics.includes(metric) ? 'compare-editorial' : undefined}
+                    >
                       <th scope="row">{metric.label}</th>
                       {repos.map((repo) => (
                         <td key={repo.id} class={best === repo.id ? 'is-best' : ''}>

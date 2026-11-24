@@ -74,25 +74,41 @@ function resolveCollections(
   repos: readonly Repo[],
   warnings: string[],
 ): ResolvedCollection[] {
-  const idByName = new Map(repos.map((repo) => [repo.name.toLowerCase(), repo.id]));
-  return collections.map((collection) => ({
-    id: collection.id,
-    title: collection.title,
-    audience: collection.audience,
-    description: collection.description,
-    last_reviewed: collection.last_reviewed,
-    entries: collection.repositories.flatMap((entry) => {
-      const id = idByName.get(entry.name.toLowerCase());
-      if (id === undefined) {
-        // A renamed or de-listed repository must not take the daily publish down with it.
+  const byName = new Map(repos.map((repo) => [repo.name.toLowerCase(), repo]));
+  return collections.map(({ repositories, decisions, ...collection }) => {
+    const reviewedStars = new Map(
+      repositories.map((entry) => [entry.name.toLowerCase(), entry.reviewed_stars]),
+    );
+    const entries = repositories.flatMap((entry) => {
+      const repo = byName.get(entry.name.toLowerCase());
+      if (repo) return [{ id: repo.id, note: entry.note }];
+      if (entry.reviewed_stars === undefined) {
         warnings.push(
           `Collection "${collection.id}" references "${entry.name}", which is not in the snapshot.`,
         );
-        return [];
       }
-      return [{ id, note: entry.note }];
-    }),
-  }));
+      return [];
+    });
+    return {
+      ...collection,
+      entries,
+      ...(decisions && {
+        decisions: decisions.map((decision) => ({
+          ...decision,
+          choices: decision.choices.map((choice) => {
+            const name = choice.name.toLowerCase();
+            const repo = byName.get(name);
+            return {
+              ...choice,
+              name: repo?.name ?? choice.name,
+              id: repo?.id ?? null,
+              reviewed_stars: reviewedStars.get(name),
+            };
+          }),
+        })),
+      }),
+    };
+  });
 }
 
 function summariseDomains(taxonomy: Taxonomy, repos: readonly Repo[]): DomainSummary[] {

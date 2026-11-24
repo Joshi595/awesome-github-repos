@@ -42,6 +42,17 @@ export function explorePath(params: Record<string, string>): string {
   return href(query ? `/?${query}` : '/');
 }
 
-export function comparePath(names: readonly string[]): string {
-  return href(names.length ? `/compare/?r=${names.join(',')}` : '/compare/');
+export interface CompareContext {
+  guide: string;
+  decision: string;
+}
+
+export function comparePath(names: readonly string[], context?: CompareContext): string {
+  if (names.length === 0) return href('/compare/');
+  const query = new URLSearchParams({ r: names.join(',') });
+  if (context) {
+    query.set('guide', context.guide);
+    query.set('decision', context.decision);
+  }
+  return href(`/compare/?${query}`);
 }

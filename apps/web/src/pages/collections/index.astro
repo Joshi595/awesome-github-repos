@@ -1,31 +1,30 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getSnapshot } from '../../lib/data';
+import { featuredGuides, getSnapshot } from '../../lib/data';
 import { collectionPath } from '../../lib/paths';
 
-const { collections } = getSnapshot();
+const featured = featuredGuides();
+const collections = getSnapshot().collections.filter((collection) => !featured.includes(collection));
 ---
 
-<Base title="Collections" description="Hand-picked sets of repositories for a specific goal, each with a note on why it is included.">
+<Base title="Guides" description="Choose tools with practical trade-offs and browse hand-picked GitHub repository collections.">
   <header class="page-head">
-    <p class="eyebrow">Editorial</p>
-    <h1>Collections</h1>
-    <p class="lede">
-      Short, hand-picked sets of repositories for a specific goal, each with a note on why it is there. A path
-      through the list rather than the whole list.
-    </p>
+    <h1>Guides</h1>
+    <p class="lede">Compare tools for a specific job and discover hand-picked repositories.</p>
   </header>
 
   <ul class="card-grid">
     {
-      collections.map((collection) => (
+      [...featured, ...collections].map((collection) => (
         <li>
           <a class="card" href={collectionPath(collection.id)}>
             <span class="eyebrow">{collection.audience}</span>
             <h2>{collection.title}</h2>
             <p>{collection.description}</p>
             <span class="card-foot">
-              {collection.entries.length} {collection.entries.length === 1 ? 'repository' : 'repositories'}
+              {collection.decisions?.length
+                ? `${collection.decisions.length} ${collection.decisions.length === 1 ? 'decision' : 'decisions'}`
+                : `${collection.entries.length} ${collection.entries.length === 1 ? 'repository' : 'repositories'}`}
             </span>
           </a>
         </li>

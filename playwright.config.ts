@@ -22,7 +22,7 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-    { name: 'phone', use: { ...devices['Pixel 7'] }, testMatch: /responsive\.spec\.ts/ },
+    { name: 'phone', use: { ...devices['Pixel 7'] }, testMatch: /(?:responsive|guides)\.spec\.ts/ },
   ],
   webServer: {
     command: `npm run preview -w @agr/web -- --port ${PORT} --host 127.0.0.1`,

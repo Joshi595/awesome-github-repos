@@ -19,21 +19,24 @@ const snapshot = getSnapshot();
 const { title, description = `Explore the ${formatNumber(snapshot.repository_count)} public GitHub repositories with ${formatNumber(snapshot.minimum_stars)}+ stars: search, filter, track what is rising, compare, and save shortlists.` } =
   Astro.props;
 
-const nav = [
+const primaryNav = [
   { label: 'Explore', href: href('/') },
-  { label: 'Rising', href: href('/rising/') },
-  { label: 'Weekly', href: href('/weekly/') },
-  { label: 'Collections', href: href('/collections/') },
-  { label: 'Topics', href: href('/topics/') },
-  { label: 'Languages', href: href('/languages/') },
+  { label: 'Guides', href: href('/collections/') },
   { label: 'Compare', href: href('/compare/') },
   { label: 'Lists', href: href('/lists/') },
+];
+const moreNav = [
+  { label: 'Rising', href: href('/rising/') },
+  { label: 'Weekly', href: href('/weekly/') },
+  { label: 'Topics', href: href('/topics/') },
+  { label: 'Languages', href: href('/languages/') },
   { label: 'My stars', href: href('/stars/') },
+  { label: 'About the data', href: href('/about/') },
 ];
 const pageTitle = title ? `${title} · ${SITE_NAME}` : `${SITE_NAME}: GitHub repositories with 10k+ stars`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(href('/og.png'), Astro.site);
-const palettePages = [...nav, { label: 'About the data', href: href('/about/') }];
+const palettePages = [...primaryNav, ...moreNav];
 const path = Astro.url.pathname;
 const isCurrent = (target: string) => (target === href('/') ? path === target : path.startsWith(target));
 ---
@@ -72,12 +75,20 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
       <div class="shell topbar-inner">
         <a class="brand" href={href('/')}>awesome<span>/</span>repos</a>
         <nav class="nav" aria-label="Main">
-          {nav.map((item) => (
+          {primaryNav.map((item) => (
             <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
           ))}
+          <details class="nav-more" id="nav-more">
+            <summary class:list={[{ 'is-current': moreNav.some((item) => isCurrent(item.href)) }]}>More</summary>
+            <ul>
+              {moreNav.map((item) => (
+                <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>
+              ))}
+            </ul>
+          </details>
         </nav>
         <div class="topbar-actions">
-          <button type="button" class="palette-button" data-palette-open>
+          <button type="button" class="palette-button" data-palette-open aria-label="Quick search">
             <span>Quick search</span>
             <kbd>Ctrl K</kbd>
           </button>
@@ -92,6 +103,9 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
     </header>
 
     <main id="main" class="shell">
+      <p class="notice freshness-notice" id="snapshot-freshness" hidden>
+        The daily catalog refresh is overdue. Last updated <time datetime={snapshot.generated_at}>{formatDate(snapshot.generated_at)}</time>.
+      </p>
       <slot />
     </main>
 
@@ -107,6 +121,34 @@ const isCurrent = (target: string) => (target === href('/') ? path === target : 
     <CommandPalette client:load pages={palettePages} />
 
     <script>
+      const more = document.querySelector<HTMLDetailsElement>('#nav-more');
+      if (more) {
+        more.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && more.open) {
+            event.stopPropagation();
+            more.open = false;
+            more.querySelector('summary')?.focus();
+          }
+        });
+        more.addEventListener('focusout', (event) => {
+          if (!more.contains(event.relatedTarget as Node | null)) more.open = false;
+        });
+        document.addEventListener('click', (event) => {
+          if (!more.contains(event.target as Node | null)) more.open = false;
+        });
+      }
+
+      const freshness = document.getElementById('snapshot-freshness');
+      const timestamp = Date.parse(freshness?.querySelector('time')?.dateTime ?? '');
+      if (freshness && Number.isFinite(timestamp)) {
+        const updateFreshness = () => {
+          freshness.hidden = Date.now() - timestamp < 48 * 60 * 60 * 1000;
+        };
+        updateFreshness();
+        window.addEventListener('pageshow', updateFreshness);
+        document.addEventListener('visibilitychange', updateFreshness);
+      }
+
       const root = document.documentElement;
       document.getElementById('theme-toggle')?.addEventListener('click', () => {
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

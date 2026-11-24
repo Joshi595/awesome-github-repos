@@ -73,7 +73,15 @@ repositories:
     note: Why this one earns its place, in a sentence.
 ```
 
-Every repository must have 10,000+ stars to be in the dataset. If one is renamed or drops out later, the build prints a warning and leaves it out instead of failing. Run `npm run data:sample` or `npm run data:fetch` and check the output for warnings.
+The ranked catalog includes repositories with 10,000+ stars. If a ranked repository is renamed or drops out, the build warns and skips its ranked entry. Run `npm run data:sample` or `npm run data:fetch` to check collection references.
+
+### Writing a guide
+
+Add optional `decisions` to a collection when readers have a specific choice to make. Give each decision a stable `id`, a task-focused `title`, and two to four `choices`. Each choice references a `name` already in `repositories` and supplies `best_fit`, `trade_off`, and an HTTPS `docs_url`.
+
+Check each trade-off against the project's documentation, then update `last_reviewed`. Keep decision IDs stable so bookmarked sections and comparison links still work. The build and the Publish workflow summary report missing ranked references.
+
+The command-line guide pilots two curated projects below 10,000 stars. Record their star counts as `reviewed_stars` on the repository entries when updating the review date. Curated picks appear in the guide with their review date. If a pick appears in the ranked snapshot, it gets the same details and actions as any ranked choice.
 
 ## Changing how domains are assigned
 

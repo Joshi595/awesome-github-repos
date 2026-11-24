@@ -8,6 +8,7 @@ import {
   type DetailBucket,
   type IndexRepo,
   type Repo,
+  type ResolvedCollection,
   type SiteIndex,
   type Snapshot,
 } from '@agr/schema';
@@ -43,6 +44,16 @@ let cached: Snapshot | null = null;
 export function getSnapshot(): Snapshot {
   cached ??= SnapshotSchema.parse(JSON.parse(readFileSync(findSnapshot(), 'utf8')));
   return cached;
+}
+
+const FEATURED_GUIDES = ['command-line-essentials', 'run-ai-locally', 'frontend-foundations'];
+
+export function featuredGuides(): ResolvedCollection[] {
+  const collections = getSnapshot().collections;
+  return FEATURED_GUIDES.flatMap(
+    (id) =>
+      collections.find((collection) => collection.id === id && collection.decisions?.length) ?? [],
+  );
 }
 
 /** Snapshot time in epoch milliseconds: the "now" all ages are measured from. */

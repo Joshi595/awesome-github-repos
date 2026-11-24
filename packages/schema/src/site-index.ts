@@ -53,7 +53,7 @@ export interface SiteIndex {
   languages: string[];
   topics: string[];
   domains: DomainSummary[];
-  collections: ResolvedCollection[];
+  collections: Omit<ResolvedCollection, 'decisions'>[];
   /** Sorted by stars, so a row's position is its rank minus one. */
   rows: IndexRow[];
 }
@@ -174,7 +174,16 @@ export function encodeSiteIndex(snapshot: Snapshot): SiteIndex {
     languages,
     topics,
     domains: snapshot.domains,
-    collections: snapshot.collections,
+    collections: snapshot.collections.map(
+      ({ id, title, audience, description, last_reviewed, entries }) => ({
+        id,
+        title,
+        audience,
+        description,
+        last_reviewed,
+        entries,
+      }),
+    ),
     rows,
   };
 }

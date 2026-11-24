@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { decodeSiteIndex, encodeDetailBuckets, encodeSiteIndex, SnapshotSchema } from '@agr/schema';
+import {
+  CollectionSchema,
+  decodeSiteIndex,
+  encodeDetailBuckets,
+  encodeSiteIndex,
+  SnapshotSchema,
+} from '@agr/schema';
 import {
   escapeCell,
   renderDomainLists,
@@ -15,7 +21,7 @@ import { assertPlausibleCount, buildSnapshot } from '../src/export/snapshot';
 import { shiftDate } from '../src/history/momentum';
 import { createHistoryEntry } from '../src/history/store';
 import { isoWeekOf } from '../src/history/weekly';
-import { collections, loadFixture, taxonomy } from './helpers';
+import { collections, loadFixture, rawRepo, taxonomy } from './helpers';
 
 const raw = loadFixture();
 const today = raw.generated_at.slice(0, 10);
@@ -46,7 +52,7 @@ describe('buildSnapshot', () => {
     expect(primaryTotal).toBeGreaterThanOrEqual(snapshot.repository_count);
   });
 
-  it('resolves every curated collection entry in the fixture', () => {
+  it('resolves every ranked collection entry in the fixture', () => {
     expect(warnings).toEqual([]);
     expect(snapshot.collections).toHaveLength(collections.length);
     const ids = new Set(snapshot.repositories.map((repo) => repo.id));
@@ -158,6 +164,60 @@ describe('buildSnapshot', () => {
     expect(result.repositories.every((repo) => repo.stars >= 200_000)).toBe(true);
     expect(result.repository_count).toBeLessThan(raw.repositories.length);
   });
+
+  it('keeps a curated pick in the guide and uses its ranked entry after it crosses the threshold', () => {
+    const name = 'Genivia/ugrep';
+    const id = 999_999_998;
+    const baseline = createHistoryEntry(shiftDate(isoWeekOf(today).start, -1), []);
+    const build = (stars: number) =>
+      buildSnapshot({
+        raw: {
+          ...raw,
+          repositories: [...raw.repositories, rawRepo(id, stars, { full_name: name })],
+        },
+        taxonomy,
+        collections,
+        history: [baseline],
+      });
+    const below = build(9_999);
+    const findGuide = (value: typeof snapshot) =>
+      value.collections.find((collection) => collection.id === 'command-line-essentials')!;
+    const findChoice = (value: typeof snapshot) =>
+      findGuide(value).decisions?.[0]?.choices.find((choice) => choice.name === name);
+
+    expect(below.warnings).toEqual([]);
+    expect(findChoice(below.snapshot)).toMatchObject({ id: null, reviewed_stars: 3338 });
+    expect(findGuide(below.snapshot).entries.some((entry) => entry.id === id)).toBe(false);
+    expect(encodeSiteIndex(below.snapshot).rows.some((row) => row[0] === id)).toBe(false);
+    expect(below.historyEntry.stars).not.toHaveProperty(String(id));
+    expect(below.snapshot.weekly[0]?.entered.some((repo) => repo.id === id)).toBe(false);
+
+    const ranked = build(10_000);
+    expect(findChoice(ranked.snapshot)).toMatchObject({ id });
+    expect(findGuide(ranked.snapshot).entries.filter((entry) => entry.id === id)).toHaveLength(1);
+    expect(ranked.snapshot.repositories.filter((repo) => repo.id === id)).toHaveLength(1);
+    expect(ranked.snapshot.weekly[0]?.entered.some((repo) => repo.id === id)).toBe(true);
+  });
+
+  it('validates choice references and prevents duplicate decisions', () => {
+    const guide = collections.find((entry) => entry.id === 'command-line-essentials')!;
+    const decision = guide.decisions![0]!;
+    const invalid = {
+      ...guide,
+      decisions: [
+        {
+          ...decision,
+          choices: [decision.choices[0], { ...decision.choices[1], name: 'unknown/repo' }],
+        },
+        decision,
+      ],
+    };
+    const result = CollectionSchema.safeParse(invalid);
+    expect(result.error?.issues.map((issue) => issue.path)).toEqual([
+      ['decisions', 0, 'choices', 1, 'name'],
+      ['decisions', 1, 'id'],
+    ]);
+  });
 });
 
 describe('assertPlausibleCount', () => {
@@ -215,6 +275,17 @@ describe('site index', () => {
 
   it('is much smaller than the snapshot', () => {
     expect(JSON.stringify(index).length).toBeLessThan(JSON.stringify(snapshot).length * 0.6);
+  });
+
+  it('leaves guide decisions out of the explorer index', () => {
+    const withoutDecisions = {
+      ...snapshot,
+      collections: snapshot.collections.map(
+        ({ decisions: _decisions, ...collection }) => collection,
+      ),
+    };
+    expect(snapshot.collections.some((collection) => collection.decisions?.length)).toBe(true);
+    expect(JSON.stringify(index)).toBe(JSON.stringify(encodeSiteIndex(withoutDecisions)));
   });
 
   it('puts every repository in exactly one detail bucket', () => {

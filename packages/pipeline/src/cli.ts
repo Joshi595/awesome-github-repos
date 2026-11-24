@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { RawSnapshotSchema, SnapshotSchema, type Snapshot } from '@agr/schema';
@@ -43,6 +43,7 @@ Commands:
                --weekly-dir <dir>     Weekly report directory (default ${DEFAULT_WEEKLY_DIR})
                --no-history           Neither read nor write history and weekly reports
                --read-only-history    Read them, but write nothing back
+               --summary              Write a data summary to GITHUB_STEP_SUMMARY
                --force                Skip the repository-count sanity check
 
   readme     Regenerate the README top list and lists/*.md from the built snapshot.
@@ -57,6 +58,32 @@ Commands:
 
 function log(message: string): void {
   console.log(message);
+}
+
+function writeBuildSummary(file: string, snapshot: Snapshot, warnings: readonly string[]): void {
+  const count = snapshot.repository_count;
+  const checked = snapshot.repositories.filter((repo) => repo.health.releases_checked).length;
+  const issueSplit = snapshot.repositories.filter(
+    (repo) => repo.health.open_issues !== null && repo.health.open_pull_requests !== null,
+  ).length;
+  const coverage = (available: number) =>
+    `${available.toLocaleString('en-US')} of ${count.toLocaleString('en-US')} (${count ? Math.round((100 * available) / count) : 0}%)`;
+  const age = Math.max(0, Date.now() - Date.parse(snapshot.generated_at)) / 3_600_000;
+  appendFileSync(
+    file,
+    [
+      '## Catalog snapshot',
+      '',
+      `- Generated ${snapshot.generated_at} (${age.toFixed(1)} hours old at build time)`,
+      `- Repositories: ${count.toLocaleString('en-US')}`,
+      `- Checked for releases: ${coverage(checked)}`,
+      `- Separate issue and pull request counts: ${coverage(issueSplit)}`,
+      `- Unresolved collection references: ${warnings.length}`,
+      '',
+      ...warnings.map((warning) => `- ${warning}`),
+      '',
+    ].join('\n'),
+  );
 }
 
 function loadSnapshot(dir: string): Snapshot {
@@ -101,6 +128,7 @@ function buildCommand(args: string[]): void {
       'weekly-dir': { type: 'string', default: DEFAULT_WEEKLY_DIR },
       'no-history': { type: 'boolean', default: false },
       'read-only-history': { type: 'boolean', default: false },
+      summary: { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
     },
   });
@@ -131,6 +159,9 @@ function buildCommand(args: string[]): void {
   });
   const { snapshot } = result;
   for (const warning of result.warnings) log(`Warning: ${warning}`);
+  if (values.summary && process.env.GITHUB_STEP_SUMMARY) {
+    writeBuildSummary(process.env.GITHUB_STEP_SUMMARY, snapshot, result.warnings);
+  }
 
   if (!values.force) {
     assertPlausibleCount(
