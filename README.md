@@ -1,25 +1,27 @@
-# GitHub Star Tracker 10K
+<h1 align="center">GitHub Star Tracker 10K</h1>
 
-Find the most-starred GitHub repositories and see which ones are gaining stars. The tracker covers every public repository with **10,000+ stars** and refreshes daily.
+<p align="center">
+  <a href="https://joshi595.github.io/github-star-tracker-10k/"><img src=".github/assets/open-live-website.png" width="210" height="44" alt="Open the live website"></a>
+</p>
 
-## [Open the live website](https://joshi595.github.io/github-star-tracker-10k/)
+<p align="center">
+  Explore every public GitHub repository with <strong>10,000+ stars</strong> and see which ones are rising. Updated daily.
+</p>
 
-[Rising repositories](https://joshi595.github.io/github-star-tracker-10k/rising/) · [Tool guides](https://joshi595.github.io/github-star-tracker-10k/collections/) · [Compare repositories](https://joshi595.github.io/github-star-tracker-10k/compare/) · [Weekly reports](https://joshi595.github.io/github-star-tracker-10k/weekly/)
-
-<!-- STATS:START -->
-**5,800** repositories with 10,000+ stars, as of **2026-11-23**.
-<!-- STATS:END -->
-
-[![The live explorer showing popular GitHub repositories, star counts, weekly gains, and filters](.github/assets/screenshot.png)](https://joshi595.github.io/github-star-tracker-10k/)
+![The explorer showing GitHub repository rankings, star counts, weekly gains, and filters](.github/assets/screenshot.png)
 
 ## What you can do on the site
 
 - **Find projects** by language, topic, domain, star count, or activity. Share a link to your filtered results.
-- **Track star growth** with repository history charts, weekly and monthly rankings, and reports on projects crossing 10,000 stars. Subscribe via the [weekly RSS feed](https://joshi595.github.io/github-star-tracker-10k/weekly/feed.xml).
-- **Compare your options** by putting up to four repositories side by side. Check releases, issues, and similar projects, or use the tool guides to weigh trade-offs.
+- **[See what’s rising](https://joshi595.github.io/github-star-tracker-10k/rising/)** with star history charts and weekly and monthly rankings. Follow the [weekly reports](https://joshi595.github.io/github-star-tracker-10k/weekly/) or subscribe via [RSS](https://joshi595.github.io/github-star-tracker-10k/weekly/feed.xml).
+- **[Compare repositories](https://joshi595.github.io/github-star-tracker-10k/compare/)** side by side. Check releases, issues, and similar projects, or browse the [tool guides](https://joshi595.github.io/github-star-tracker-10k/collections/) to weigh trade-offs.
 - **Save what you find** in browser-based shortlists you can share or export as Markdown. Enter a GitHub username to see which popular repositories it has starred and discover related projects.
 
 ## Rankings on GitHub
+
+<!-- STATS:START -->
+**5,800** repositories with 10,000+ stars, as of **2026-11-23**.
+<!-- STATS:END -->
 
 The table below and the [lists by domain](lists/) are refreshed weekly.
 
